@@ -1,240 +1,195 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FXKaram Pro Trader</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Atom Flashcard</title>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+        }
 
-<style>
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #0f2027; /* Dark space background */
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-.card{
-width:95%;
-max-width:480px;
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
-border-radius:20px;
-padding:25px;
-box-shadow:0 0 40px rgba(0,0,0,0.6);
-text-align:center;
-}
+        /* Canvas for Atom Background */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
 
-button{
-padding:12px;
-border:none;
-border-radius:10px;
-margin:8px 0;
-background:#00f5ff;
-color:black;
-font-weight:600;
-cursor:pointer;
-width:100%;
-}
+        /* Flashcard Container */
+        .card-container {
+            perspective: 1000px;
+            cursor: pointer;
+        }
 
-.answers{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
+        .card {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 15px;
+        }
 
-.correct{background:#22c55e !important;}
-.wrong{background:#ef4444 !important;}
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
 
-.hidden{display:none;}
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
 
-.footer{
-position:absolute;
-bottom:10px;
-font-size:12px;
-opacity:0.7;
-}
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
 
-.footer img{width:15px;}
-canvas{margin-top:15px;}
-</style>
+        /* Bubble Effect Style */
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rise 1s ease-out forwards;
+            z-index: 10;
+        }
+
+        @keyframes rise {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: translateY(-100px) scale(2); opacity: 0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
+    <canvas id="canvas"></canvas>
 
-<div id="startPage">
-<h2>🔥 Pro Trader Challenge</h2>
-<button onclick="toggleSound()" id="soundBtn">🔊 Sound ON</button>
-<button onclick="startQuiz()">Start</button>
-</div>
+    <div class="card-container" onclick="handleCardClick(event)">
+        <div class="card" id="mainCard">
+            <div class="card-face card-front">
+                <h3>Question</h3>
+                <p>What is the smallest unit of matter?</p>
+                <small>(Tap to reveal)</small>
+            </div>
+            <div class="card-face card-back">
+                <h3>Answer</h3>
+                <p>The Atom!</p>
+            </div>
+        </div>
+    </div>
 
-<div id="quizPage" class="hidden">
-<h3 id="question"></h3>
-<div class="answers" id="answers"></div>
-<div id="explanation" style="margin-top:10px;color:#cbd5e1;"></div>
-<button onclick="nextQ()">Next</button>
-</div>
+    <audio id="popSound">
+        <source src="https://www.soundjay.com/buttons/sounds/button-20.mp3" type="audio/mpeg">
+    </audio>
 
-<div id="resultPage" class="hidden">
-<h2>Final Result</h2>
-<h3 id="scoreText"></h3>
-<h3 id="levelText"></h3>
-<canvas id="chart" width="350" height="200"></canvas>
-<button onclick="restart()">Restart</button>
-</div>
+    <script>
+        // 1. Atom Background Animation
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
 
-</div>
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
 
-<div class="footer">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
- @fxkaram community
-</div>
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5; // Slow motion
+                this.speedY = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 210, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
 
-<!-- AUDIO -->
-<audio id="bgMusic" loop preload="auto">
-<source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_946c1e9f31.mp3">
-</audio>
-<audio id="click" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3"></audio>
-<audio id="correct" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
-<audio id="wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-tone-2870.mp3"></audio>
+        function createParticles() {
+            for (let i = 0; i < 80; i++) {
+                particles.push(new Particle());
+            }
+        }
 
-<script>
-let soundOn=true;
-let unlocked=false;
-let score=0;
-let index=0;
-let results=[];
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
 
-document.body.addEventListener("click", unlockAudio, {once:true});
+        // 2. Click Logic: Sound + Bubble + Flip
+        function handleCardClick(e) {
+            // Play Sound
+            const sound = document.getElementById('popSound');
+            sound.currentTime = 0;
+            sound.play();
 
-function unlockAudio(){
-document.getElementById("bgMusic").volume=0.2;
-if(soundOn){
-document.getElementById("bgMusic").play();
-}
-unlocked=true;
-}
+            // Flip Card
+            document.getElementById('mainCard').classList.toggle('flipped');
 
-function toggleSound(){
-soundOn=!soundOn;
-document.getElementById("soundBtn").innerText=soundOn?"🔊 Sound ON":"🔇 Sound OFF";
-if(unlocked){
-if(soundOn){document.getElementById("bgMusic").play();}
-else{document.getElementById("bgMusic").pause();}
-}
-}
+            // Create Bubble Effect at mouse position
+            createBubble(e.clientX, e.clientY);
+        }
 
-function startQuiz(){
-document.getElementById("startPage").classList.add("hidden");
-document.getElementById("quizPage").classList.remove("hidden");
-loadQ();
-}
+        function createBubble(x, y) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            b.style.left = (x - 10) + 'px';
+            b.style.top = (y - 10) + 'px';
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 1000);
+        }
 
-const data=[
-{
-q:"Liquidity Sweep ဖြစ်ပြီး Close Break ဖြစ်မှဘာဖြစ်သလဲ?",
-a:["True BOS","Fake","Random","Indicator"],
-c:"True BOS",
-e:"Sweep + Close Break ဖြစ်မှ valid structure break ဖြစ်ပါတယ်။"
-},
-{
-q:"RRR 1:3 ကိုဘာကြောင့် Pro Trader သုံးသလဲ?",
-a:["Risk နည်း Reward များ","Lot ကြီး","Win Rate 100%","Indicator"],
-c:"Risk နည်း Reward များ",
-e:"Low Risk High Reward Model သည် Long term survive လုပ်စေသည်။"
-},
-{
-q:"Equal High တွေဘာကိုဆိုလို?",
-a:["Liquidity","Trend End","Random","Spread"],
-c:"Liquidity",
-e:"Stop Loss များစုနေသောနေရာဖြစ်သည်။"
-}
-];
-
-function loadQ(){
-document.getElementById("question").innerText=data[index].q;
-document.getElementById("explanation").innerText="";
-let ans=document.getElementById("answers");
-ans.innerHTML="";
-data[index].a.forEach(choice=>{
-let btn=document.createElement("button");
-btn.innerText=choice;
-btn.onclick=()=>check(btn,choice);
-ans.appendChild(btn);
-});
-}
-
-function check(btn,choice){
-if(soundOn) document.getElementById("click").play();
-
-if(choice===data[index].c){
-btn.classList.add("correct");
-score++;
-results.push(1);
-if(soundOn) document.getElementById("correct").play();
-}else{
-btn.classList.add("wrong");
-results.push(0);
-if(soundOn) document.getElementById("wrong").play();
-}
-
-document.getElementById("explanation").innerText=data[index].e;
-}
-
-function nextQ(){
-index++;
-if(index>=data.length){
-showResult();
-return;
-}
-loadQ();
-}
-
-function showResult(){
-document.getElementById("quizPage").classList.add("hidden");
-document.getElementById("resultPage").classList.remove("hidden");
-
-document.getElementById("scoreText").innerText="Score: "+score+" / "+data.length;
-
-let level="";
-if(score==data.length) level="Market Assassin 🔥";
-else if(score>=2) level="Pro Trader";
-else level="Still Learning";
-
-document.getElementById("levelText").innerText="Level: "+level;
-
-drawChart();
-}
-
-function drawChart(){
-let canvas=document.getElementById("chart");
-let ctx=canvas.getContext("2d");
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-ctx.beginPath();
-ctx.moveTo(20,180);
-
-for(let i=0;i<results.length;i++){
-let x=20+(i*100);
-let y=results[i]?50:150;
-ctx.lineTo(x,y);
-}
-
-ctx.strokeStyle="#00f5ff";
-ctx.lineWidth=3;
-ctx.stroke();
-}
-
-function restart(){
-location.reload();
-}
-</script>
-
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        createParticles();
+        animate();
+    </script>
 </body>
 </html>
