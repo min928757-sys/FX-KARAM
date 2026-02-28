@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Atom Flashcard</title>
+    <title>Professor Pro - Interactive Flashcard</title>
     <style>
         :root {
             --primary: #00d2ff;
@@ -14,15 +14,16 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: #0f2027; /* Dark space background */
-            font-family: 'Segoe UI', sans-serif;
+            background: #0f2027;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        /* Canvas for Atom Background */
+        /* Atom Background */
         #canvas {
             position: absolute;
             top: 0;
@@ -30,25 +31,48 @@
             z-index: -1;
         }
 
-        /* Flashcard Container */
+        /* Sound Control Button */
+        .controls {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 100;
+        }
+
+        #musicBtn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        #musicBtn.active {
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Flashcard Design */
         .card-container {
             perspective: 1000px;
             cursor: pointer;
         }
 
         .card {
-            width: 300px;
-            height: 200px;
+            width: 350px;
+            height: 250px;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-radius: 15px;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .card.flipped {
-            transform: rotateY(180deg);
-        }
+        .card.flipped { transform: rotateY(180deg); }
 
         .card-face {
             position: absolute;
@@ -59,81 +83,152 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
-            border: 2px solid var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
 
         .card-back {
             transform: rotateY(180deg);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(145deg, #00d2ff, #3a7bd5);
         }
 
-        /* Bubble Effect Style */
+        h2 { margin: 0 0 10px 0; color: var(--primary); }
+        .card-back h2 { color: white; }
+
+        /* Bubble Animation */
         .bubble {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.4);
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #fff, var(--primary));
             border-radius: 50%;
             pointer-events: none;
-            animation: rise 1s ease-out forwards;
-            z-index: 10;
+            animation: floatUp 1s ease-out forwards;
         }
 
-        @keyframes rise {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: translateY(-100px) scale(2); opacity: 0; }
+        @keyframes floatUp {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: translateY(-120px) scale(2.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
+
+    <div class="controls">
+        <button id="musicBtn" onclick="toggleAllSounds()">🎵 START STUDYING</button>
+    </div>
 
     <canvas id="canvas"></canvas>
 
     <div class="card-container" onclick="handleCardClick(event)">
         <div class="card" id="mainCard">
             <div class="card-face card-front">
-                <h3>Question</h3>
-                <p>What is the smallest unit of matter?</p>
-                <small>(Tap to reveal)</small>
+                <h2>Quick Quiz</h2>
+                <p>What are the three main subatomic particles?</p>
+                <small style="margin-top:20px; color: #00d2ff;">Click to Flip</small>
             </div>
             <div class="card-face card-back">
-                <h3>Answer</h3>
-                <p>The Atom!</p>
+                <h2>Answer</h2>
+                <p>Protons, Neutrons, and Electrons</p>
             </div>
         </div>
     </div>
 
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundjay.com/free-music/sounds/dream-raid-01.mp3" type="audio/mpeg">
+    </audio>
     <audio id="popSound">
         <source src="https://www.soundjay.com/buttons/sounds/button-20.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-                // 2. Click Logic: Sound + Bubble + Flip
-        function handleCardClick(e) {
-            const sound = document.getElementById('popSound');
-            
-            // အသံကို ပထမဆုံးအကြိမ် နှိပ်ကတည်းက အလုပ်လုပ်အောင် လုပ်ခြင်း
-            sound.currentTime = 0; 
-            let playPromise = sound.play();
+        let soundsActive = false;
+        const bgMusic = document.getElementById('bgMusic');
+        const popSound = document.getElementById('popSound');
+        const musicBtn = document.getElementById('musicBtn');
 
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    console.log("Audio started!");
-                }).catch(error => {
-                    console.log("Audio blocked by browser. Click anywhere first.");
-                });
+        // Background music volume ကို ဖြည်းဖြည်းလေးပဲ ထားမယ် (အနှောင့်အယှက်မဖြစ်အောင်)
+        bgMusic.volume = 0.3;
+
+        function toggleAllSounds() {
+            if (!soundsActive) {
+                bgMusic.play();
+                musicBtn.innerText = "🔊 MUSIC: ON";
+                musicBtn.classList.add('active');
+                soundsActive = true;
+            } else {
+                bgMusic.pause();
+                musicBtn.innerText = "🎵 MUSIC: OFF";
+                musicBtn.classList.remove('active');
+                soundsActive = false;
             }
-
-            document.getElementById('mainCard').classList.toggle('flipped');
-            createBubble(e.clientX, e.clientY);
         }
 
+        function handleCardClick(e) {
+            document.getElementById('mainCard').classList.toggle('flipped');
+            createBubble(e.clientX, e.clientY);
+            
+            if (soundsActive) {
+                popSound.currentTime = 0;
+                popSound.play();
+            }
+        }
+
+        function createBubble(x, y) {
+            for(let i=0; i<3; i++) { // နှိပ်လိုက်ရင် bubble ၃ ခု ထွက်လာအောင်
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                b.style.left = (x + (Math.random() * 20 - 10)) + 'px';
+                b.style.top = (y + (Math.random() * 20 - 10)) + 'px';
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 1000);
+            }
+        }
+
+        // --- Atom Particle System ---
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let dots = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            dots = [];
+            for (let i = 0; i < 70; i++) {
+                dots.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 2 + 0.5,
+                    dx: (Math.random() - 0.5) * 0.4,
+                    dy: (Math.random() - 0.5) * 0.4
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(0, 210, 255, 0.3)";
+            dots.forEach(d => {
+                d.x += d.dx;
+                d.y += d.dy;
+                if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
+                if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
     </script>
 </body>
 </html>
