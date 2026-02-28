@@ -1,47 +1,698 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading Patterns</title>
+    <title>📊 Trading သင်ခန်းစာ - Flash Cards</title>
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background: #0b0e11; color: #eaecef; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #1e2329; border-radius: 15px; padding: 20px; border: 1px solid #f0b90b; max-width: 350px; margin: auto; }
-        .chart-placeholder { width: 100%; height: 200px; background: #2b3139; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-radius: 10px; font-weight: bold; color: #f0b90b; }
-        button { background: #f0b90b; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin: 5px; }
-        .result { margin-top: 15px; display: none; padding: 10px; border-radius: 5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Padauk', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0b1120 0%, #1a2639 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Telegram Logo အတွက် Style */
+        .telegram-header {
+            background: #0088cc;
+            padding: 15px 25px;
+            border-radius: 100px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,136,204,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .telegram-header i {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+        
+        .free-edu-badge {
+            background: #ffd700;
+            color: #1a1a1a;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 1rem;
+            margin-left: 10px;
+            font-weight: 800;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        h1 i {
+            color: #fbbf24;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            padding-left: 10px;
+            border-left: 4px solid #0088cc;
+        }
+        
+        /* Progress Bar */
+        .progress-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .progress-bg {
+            background: #1e293b;
+            height: 14px;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0088cc, #3b82f6);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 50px;
+            position: relative;
+        }
+        
+        /* Main Card */
+        .flash-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
+            margin-bottom: 25px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .card-num {
+            background: #0088cc;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .card-num i {
+            margin-right: 8px;
+        }
+        
+        .topic-badge {
+            background: #2d3748;
+            color: #fbbf24;
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid #fbbf24;
+            font-weight: 600;
+        }
+        
+        /* Question */
+        .question-box {
+            background: #0f172a;
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        
+        .question-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        /* Chart Area */
+        .chart-area {
+            background: #0b1120;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px solid #2d3748;
+        }
+        
+        .chart-box {
+            width: 100%;
+            height: 200px;
+            background: #1a2639;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Simple Chart Drawing */
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-time {
+            text-align: right;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        /* Options */
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .choice-btn {
+            background: #1e293b;
+            border: 2px solid #334155;
+            padding: 20px;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .choice-btn:hover:not(:disabled) {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            transform: translateY(-3px);
+        }
+        
+        .choice-prefix {
+            background: #0f172a;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-weight: 800;
+            color: #fbbf24;
+        }
+        
+        /* Result Message */
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 20px;
+            display: none;
+        }
+        
+        .result-box.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            display: block;
+        }
+        
+        .result-box.wrong {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            display: block;
+        }
+        
+        .result-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .explanation-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #334155;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background: #0088cc;
+            border-color: #0088cc;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Telegram Footer */
+        .telegram-footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+        
+        .telegram-footer i {
+            color: #0088cc;
+            font-size: 1.8rem;
+            margin: 0 8px;
+            vertical-align: middle;
+        }
+        
+        .footer-link {
+            color: #0088cc;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .question-text {
+                font-size: 1.4rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>AI Pattern Master</h2>
-    <div id="game-container">
-        <div class="card">
-            <div id="pattern-name" class="chart-placeholder">Loading Pattern...</div>
-            <p>What is this pattern signal?</p>
-            <button onclick="checkAnswer('Buy')">BULLISH (BUY)</button>
-            <button onclick="checkAnswer('Sell')">BEARISH (SELL)</button>
-            <div id="result-box" class="result"></div>
+    <div class="container">
+        <!-- Telegram Header -->
+        <div class="telegram-header">
+            <i class="fab fa-telegram"></i>
+            <span>FREE EDUCATION <span class="free-edu-badge">MYANMAR</span></span>
+        </div>
+        
+        <!-- Main Title -->
+        <h1>
+            <i class="fas fa-chart-line"></i> 
+            Trading သင်ခန်းစာ
+            <i class="fas fa-bolt"></i>
+        </h1>
+        <div class="subtitle">
+            <i class="fas fa-lightbulb"></i> Flash Cards နည်းဖြင့် လေ့လာကြမယ် (အခု ၅ ခုမြောက်)
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-card">
+            <div class="progress-info">
+                <span><i class="fas fa-flag-checkered"></i> မေးခွန်း အမှတ်စဉ်</span>
+                <span id="progress-text">1 / 5</span>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
+            </div>
+        </div>
+        
+        <!-- Flash Card Main -->
+        <div class="flash-card" id="flashCard">
+            <div class="card-header">
+                <span class="card-num">
+                    <i class="fas fa-question-circle"></i> 
+                    <span id="card-number">၁/၅</span>
+                </span>
+                <span class="topic-badge">
+                    <i class="fas fa-candlestick-chart"></i> 
+                    <span id="topic-name">ဖယောင်းတိုင် (Candlestick)</span>
+                </span>
+            </div>
+            
+            <!-- Question Area -->
+            <div class="question-box">
+                <div class="question-text" id="question">
+                    ဒီ Chart မှာ ဘာ Pattern ကို မြင်ရပါသလဲ။
+                </div>
+                
+                <!-- Chart Area -->
+                <div class="chart-area">
+                    <div class="chart-box" id="chartBox">
+                        <!-- Chart will be drawn here by JavaScript -->
+                    </div>
+                    <div class="chart-time">
+                        <i class="far fa-clock"></i> ၁ နာရီပိုင်း (1H Timeframe)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Options -->
+            <div class="options-container" id="optionsContainer">
+                <!-- Options will be inserted by JavaScript -->
+            </div>
+            
+            <!-- Result Message -->
+            <div id="resultBox" class="result-box">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span class="result-icon" id="resultIcon">✅</span>
+                    <div>
+                        <div class="result-title" id="resultTitle">မှန်ပါတယ်။</div>
+                        <div id="simpleResult"></div>
+                    </div>
+                </div>
+                <div class="explanation-box" id="explanation">
+                    <!-- Explanation will appear here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> ရှေ့သို့
+            </button>
+            <button class="nav-btn" id="nextBtn">
+                နောက်သို့ <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        
+        <!-- Telegram Footer -->
+        <div class="telegram-footer">
+            <i class="fab fa-telegram"></i> 
+            <a href="#" class="footer-link">t.me/freeeducationmyanmar</a> တွင် ဆက်သွယ်မေးမြန်းနိုင်ပါသည်။
+            <i class="fab fa-telegram"></i>
         </div>
     </div>
-
+    
     <script>
-        const patterns = [
-            { name: "Hammer Candle", type: "Buy", ai: "AI Summary: This shows buyers are rejecting lower prices. Potential reversal." },
-            { name: "Shooting Star", type: "Sell", ai: "AI Summary: Sellers pushed price down from the top. Bearish signal." }
-        ];
-        let current = 0;
-
-        function checkAnswer(choice) {
-            const res = document.getElementById('result-box');
-            res.style.display = "block";
-            if(choice === patterns[current].type) {
-                res.innerHTML = "✅ Correct! <br><small>" + patterns[current].ai + "</small>";
-                res.style.background = "#2ebd85";
-            } else {
-                res.innerHTML = "❌ Wrong! <br><small>" + patterns[current].ai + "</small>";
-                res.style.background = "#f6465d";
+        // Trading Flash Cards Data - မြန်မာလို ရှင်းလင်းချက်များ
+        const flashcards = [
+            {
+                id: 1,
+                topic: "ဖယောင်းတိုင် (Candlestick)",
+                question: "ဒီပုံမှာ ဘယ်လို Candlestick Pattern ကို မြင်ရပါသလဲ။",
+                chart: "bullish-engulfing",
+                options: [
+                    "Bullish Engulfing (အစိမ်းရောင် ဝါးမြိုခြင်း)",
+                    "Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
+                    "Doji (ဆုံးဖြတ်ချက်မရှိ)",
+                    "Hammer (တူပုံစံ)"
+                ],
+                correct: 0, // ပထမအဖြေ (index 0)
+                explanation: "✅ မှန်ပါတယ်။ ဒါက Bullish Engulfing ပါ။\n\nအကြောင်းက: အနီရောင်ဖယောင်းတိုင်အသေလေးကို အစိမ်းရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားတာကို တွေ့ရမှာပါ။ ဒါက ဝယ်သူတွေ သန်လာပြီဆိုတဲ့ အချက်ပြမှုပါ။ စျေးတက်တော့မယ်လို့ ခန့်မှန်းလို့ရပါတယ်။ 📈",
+                idea: "💡 သိမှတ်ဖွယ်: Bullish Engulfing ဆိုတာ စျေးကျနေတဲ့အချိန်မှာ ရုတ်တရက် ဝယ်အားကောင်းလာတာကိုပြတာပါ။ နောက်နေ့တွေမှာ စျေးတက်နိုင်ခြေများပါတယ်။"
+            },
+            {
+                id: 2,
+                topic: "ဖယောင်းတိုင် (Candlestick)",
+                question: "ဒီပုံမှာ ဘယ်လို Reversal Pattern ကို တွေ့ရပါသလဲ။",
+                chart: "bearish-engulfing",
+                options: [
+                    "Bullish Engulfing",
+                    "Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
+                    "Morning Star",
+                    "Evening Star"
+                ],
+                correct: 1,
+                explanation: "✅ မှန်ပါတယ်။ Bearish Engulfing ပါ။\n\nအကြောင်းက: အစိမ်းရောင်ဖယောင်းတိုင်အသေးကို အနီရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားပါတယ်။ ဒါက ရောင်းသူတွေ သန်လာပြီဆိုတဲ့အချက်ပါ။ စျေးကျတော့မယ့် နိမိတ်ပါပဲ။ 📉",
+                idea: "💡 သိမှတ်ဖွယ်: စျေးတက်နေတဲ့အချိန်မှာ Bearish Engulfing ပေါ်လာရင် သတိထားသင့်ပါတယ်။ အမြတ်ယူဖို့ အချိန်ကောင်းဖြစ်နိုင်ပါတယ်။"
+            },
+            {
+                id: 3,
+                topic: "Support & Resistance",
+                question: "ဒီပုံမှာ ဘယ်နေရာက Support လိုင်းလဲ။",
+                chart: "support-resistance",
+                options: [
+                    "အနီရောင်မျဉ်း (အောက်ခြေမျဉ်း)",
+                    "အပြာရောင်မျဉ်း (အပေါ်မျဉ်း)",
+                    "အလယ်က မျဉ်း",
+                    "မျဉ်းတွေမရှိဘူး"
+                ],
+                correct: 0,
+                explanation: "✅ မှန်ပါတယ်။ အနီရောင်မျဉ်းက Support ပါ။\n\nအကြောင်းက: Support ဆိုတာ စျေးကျလို့ မကျော်နိုင်တဲ့ အောက်ခြေအဆင့်ပါ။ ဒီနေရာရောက်ရင် ဝယ်သူတွေက ပြန်ဝယ်ကြတယ်။ စျေးပြန်တက်တတ်တယ်။",
+                idea: "💡 သိမှတ်ဖွယ်: Support ကို ချိုးကျရင် စျေးဆက်ကျတတ်တယ်။ Resistance ကို ဖောက်တက်ရင် စျေးဆက်တက်တတ်တယ်။"
+            },
+            {
+                id: 4,
+                topic: "Pattern များ",
+                question: "ဒီပုံမှာ ဘယ် Chart Pattern ကို တွေ့ရပါသလဲ။",
+                chart: "double-top",
+                options: [
+                    "Double Top (အထွတ်နှစ်ခု)",
+                    "Double Bottom (အခြေနှစ်ခု)",
+                    "Head & Shoulders",
+                    "Triangle"
+                ],
+                correct: 0,
+                explanation: "✅ မှန်ပါတယ်။ Double Top ပါ။\n\nအကြောင်းက: စျေးက မြင့်တဲ့နေရာနှစ်ခုကို ရိုက်ပြီး ပြန်ကျလာတာကို တွေ့ရမှာပါ။ ဒါက စျေးဆက်ကျတော့မယ့် လက္ခဏာပါ။",
+                idea: "💡 သိမှတ်ဖွယ်: Double Top ပေါ်ရင် ရောင်းဖို့ စဉ်းစားသင့်တယ်။ Double Bottom ပေါ်ရင် ဝယ်ဖို့ စဉ်းစားသင့်တယ်။"
+            },
+            {
+                id: 5,
+                topic: "Trend ခွဲခြားခြင်း",
+                question: "ဒီပုံမှာ ဘယ်လို Trend မျိုးလဲ။",
+                chart: "uptrend",
+                options: [
+                    "Uptrend (အတက်ဘက်)",
+                    "Downtrend (အကျဘက်)",
+                    "Sideway (ဘေးတိုက်)",
+                    "Trend မရှိဘူး"
+                ],
+                correct: 0,
+                explanation: "✅ မှန်ပါတယ်။ Uptrend ပါ။\n\nအကြောင်းက: စျေးက အနိမ့်အမြင့်တွေ မြင့်လာတာကို တွေ့ရမှာပါ။ Higher High နဲ့ Higher Low ဖြစ်နေတယ်။ ဝယ်ထားသင့်တဲ့ အချိန်ပါ။",
+                idea: "💡 သိမှတ်ဖွယ်: Uptrend ဆိုတာ မိတ်ဆွေပါ။ အတက်လမ်းကြောင်းမှာ ဝယ်တာက အမြတ်ရနိုင်ခြေများတယ်။"
             }
+        ];
+        
+        let currentCard = 0;
+        let selectedOption = null;
+        let answered = false;
+        
+        // Load Card Function
+        function loadCard(index) {
+            const card = flashcards[index];
+            
+            // Update headers
+            document.getElementById('card-number').innerText = `${index+1}/5`;
+            document.getElementById('topic-name').innerText = card.topic;
+            document.getElementById('progress-text').innerText = `${index+1} / 5`;
+            document.getElementById('progress-fill').style.width = `${((index+1)/5)*100}%`;
+            
+            // Update question
+            document.getElementById('question').innerText = card.question;
+            
+            // Load options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            card.options.forEach((option, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `
+                    <span class="choice-prefix">${String.fromCharCode(65 + i)}</span>
+                    <span>${option}</span>
+                `;
+                btn.onclick = () => checkAnswer(i);
+                optionsContainer.appendChild(btn);
+            });
+            
+            // Draw chart (simplified)
+            drawChart(card.chart);
+            
+            // Reset result box
+            document.getElementById('resultBox').className = 'result-box';
+            document.getElementById('resultBox').style.display = 'none';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === 4;
+            
+            answered = false;
+            selectedOption = null;
         }
+        
+        // Simple Chart Drawing Function
+        function drawChart(type) {
+            const chartBox = document.getElementById('chartBox');
+            let svg = '';
+            
+            if(type === 'bullish-engulfing') {
+                svg = `
+                    <svg viewBox="0 0 400 200">
+                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
+                        <rect x="100" y="150" width="30" height="50" fill="#ef4444" opacity="0.8"/>
+                        <rect x="150" y="80" width="40" height="120" fill="#22c55e" opacity="0.9"/>
+                        <text x="200" y="50" fill="white">Bullish Engulfing</text>
+                    </svg>
+                `;
+            } else if(type === 'bearish-engulfing') {
+                svg = `
+                    <svg viewBox="0 0 400 200">
+                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
+                        <rect x="100" y="100" width="30" height="80" fill="#22c55e" opacity="0.8"/>
+                        <rect x="150" y="130" width="40" height="50" fill="#ef4444" opacity="0.9"/>
+                        <text x="200" y="50" fill="white">Bearish Engulfing</text>
+                    </svg>
+                `;
+            } else if(type === 'support-resistance') {
+                svg = `
+                    <svg viewBox="0 0 400 200">
+                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
+                        <line x1="50" y1="120" x2="350" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/>
+                        <line x1="50" y1="60" x2="350" y2="60" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="50" y="100" fill="#ef4444">Support</text>
+                        <text x="50" y="40" fill="#3b82f6">Resistance</text>
+                    </svg>
+                `;
+            } else if(type === 'double-top') {
+                svg = `
+                    <svg viewBox="0 0 400 200">
+                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
+                        <path d="M50,150 L120,50 L190,150 L260,50 L330,150" stroke="#fbbf24" stroke-width="3" fill="none"/>
+                        <text x="200" y="30" fill="white">Double Top</text>
+                    </svg>
+                `;
+            } else if(type === 'uptrend') {
+                svg = `
+                    <svg viewBox="0 0 400 200">
+                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
+                        <path d="M50,180 L120,140 L190,100 L260,60 L330,20" stroke="#22c55e" stroke-width="4" fill="none"/>
+                        <text x="200" y="50" fill="white">Uptrend</text>
+                    </svg>
+                `;
+            }
+            
+            chartBox.innerHTML = svg;
+        }
+        
+        // Check Answer Function
+        function checkAnswer(selectedIndex) {
+            if(answered) return;
+            
+            const card = flashcards[currentCard];
+            const isCorrect = selectedIndex === card.correct;
+            
+            // Show result box
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = `result-box ${isCorrect ? 'correct' : 'wrong'}`;
+            resultBox.style.display = 'block';
+            
+            // Set result content
+            document.getElementById('resultIcon').innerText = isCorrect ? '✅' : '❌';
+            document.getElementById('resultTitle').innerText = isCorrect ? 'မှန်ပါတယ်။' : 'မှားပါတယ်။';
+            
+            let explanation = isCorrect ? card.explanation : `❌ မှားပါတယ်။ အဖြေမှန်က ${card.options[card.correct]} ပါ။\n\n${card.explanation.replace('✅ မှန်ပါတယ်။', '')}`;
+            
+            // Add idea emoji
+            explanation += `\n\n${card.idea}`;
+            
+            document.getElementById('explanation').innerText = explanation;
+            document.getElementById('simpleResult').innerText = isCorrect ? 'ဂုဏ်ယူပါတယ်။' : 'နောက်တစ်ခါ ကြိုးစားကြည့်ပါ။';
+            
+            // Mark as answered
+            answered = true;
+            
+            // Play sound effect (simulated)
+            console.log(isCorrect ? '✅ Correct sound' : '❌ Wrong sound');
+        }
+        
+        // Navigation Functions
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if(currentCard > 0) {
+                currentCard--;
+                loadCard(currentCard);
+            }
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if(currentCard < 4) {
+                currentCard++;
+                loadCard(currentCard);
+            }
+        });
+        
+        // Load first card
+        loadCard(0);
     </script>
 </body>
 </html>
