@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Trading သင်ခန်းစာ - Flash Cards</title>
+    <title>@fxkaram Trading Cards</title>
     
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -19,91 +19,71 @@
         }
         
         body {
-            font-family: 'Padauk', 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0b1120 0%, #1a2639 100%);
+            font-family: 'Padauk', sans-serif;
+            background: #0a0c14; /* အမဲရောင် Background */
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
         
-        /* Telegram Logo အတွက် Style */
+        .container {
+            max-width: 950px;
+            width: 100%;
+        }
+        
+        /* Telegram Header - ဆန့်ကျင်ဖက်အရောင် */
         .telegram-header {
-            background: #0088cc;
-            padding: 15px 25px;
+            background: #ffffff; /* ဖြူဖြူလေး */
+            padding: 15px 28px;
             border-radius: 100px;
             display: inline-flex;
             align-items: center;
             gap: 15px;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,136,204,0.3);
-            border: 2px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,136,204,0.3);
+            border: 2px solid #0088cc;
         }
         
         .telegram-header i {
             font-size: 2.5rem;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            color: #0088cc; /* Telegram အပြာ */
         }
         
-        .free-edu-badge {
-            background: #ffd700;
-            color: #1a1a1a;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 1rem;
-            margin-left: 10px;
+        .fxkaram-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0a0c14; /* အမဲရောင် စာလုံး (Background နဲ့ ဆန့်ကျင်ဖက်) */
+            letter-spacing: 1px;
+        }
+        
+        .fxkaram-text span {
+            color: #0088cc;
             font-weight: 800;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        h1 i {
-            color: #fbbf24;
-        }
-        
-        .subtitle {
-            color: #94a3b8;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            padding-left: 10px;
-            border-left: 4px solid #0088cc;
         }
         
         /* Progress Bar */
         .progress-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
+            background: #ffffff; /* အဖြူရောင် Card */
+            border-radius: 30px;
+            padding: 20px 25px;
             margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid #e2e8f0;
         }
         
         .progress-info {
             display: flex;
             justify-content: space-between;
-            color: white;
+            color: #1e293b; /* အမဲရောင် စာလုံး */
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-bottom: 12px;
-            font-size: 1.1rem;
         }
         
         .progress-bg {
-            background: #1e293b;
+            background: #e2e8f0;
             height: 14px;
             border-radius: 50px;
             overflow: hidden;
@@ -112,20 +92,17 @@
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #0088cc, #3b82f6);
-            width: 0%;
-            transition: width 0.5s ease;
+            width: 20%;
             border-radius: 50px;
-            position: relative;
         }
         
-        /* Main Card */
+        /* Main Flash Card */
         .flash-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.15);
+            background: #ffffff; /* အဖြူရောင် Card */
             border-radius: 40px;
             padding: 30px;
-            box-shadow: 0 30px 60px -20px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            border: 1px solid #e2e8f0;
             margin-bottom: 25px;
         }
         
@@ -135,7 +112,7 @@
             align-items: center;
             margin-bottom: 25px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
         }
         
         .card-num {
@@ -147,30 +124,26 @@
             font-size: 1.2rem;
         }
         
-        .card-num i {
-            margin-right: 8px;
-        }
-        
         .topic-badge {
-            background: #2d3748;
-            color: #fbbf24;
-            padding: 8px 20px;
+            background: #f1f5f9;
+            color: #0f172a; /* အမဲရောင် စာလုံး */
+            padding: 8px 22px;
             border-radius: 50px;
-            border: 1px solid #fbbf24;
             font-weight: 600;
+            border: 1px solid #cbd5e1;
         }
         
-        /* Question */
+        /* Question Area */
         .question-box {
-            background: #0f172a;
+            background: #f8fafc; /* ဖြူဖျော့ဖျော့ */
             border-radius: 30px;
             padding: 25px;
             margin-bottom: 25px;
-            border: 1px solid #334155;
+            border: 1px solid #cbd5e1;
         }
         
         .question-text {
-            color: white;
+            color: #0f172a; /* အမဲရောင် စာလုံး */
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 20px;
@@ -179,32 +152,26 @@
         
         /* Chart Area */
         .chart-area {
-            background: #0b1120;
+            background: #ffffff;
             border-radius: 25px;
             padding: 20px;
-            margin: 25px 0;
-            border: 1px solid #2d3748;
+            margin: 20px 0;
+            border: 1px solid #cbd5e1;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         
         .chart-box {
             width: 100%;
             height: 200px;
-            background: #1a2639;
+            background: #ffffff;
             border-radius: 15px;
             position: relative;
-            overflow: hidden;
-        }
-        
-        /* Simple Chart Drawing */
-        .chart-svg {
-            width: 100%;
-            height: 100%;
         }
         
         .chart-time {
             text-align: right;
-            color: #64748b;
-            font-size: 0.9rem;
+            color: #475569; /* မီးခိုးရောင် */
+            font-size: 0.95rem;
             margin-top: 10px;
         }
         
@@ -213,19 +180,19 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin: 30px 0;
+            margin: 25px 0;
         }
         
         .choice-btn {
-            background: #1e293b;
-            border: 2px solid #334155;
-            padding: 20px;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            padding: 18px;
             border-radius: 20px;
-            color: white;
+            color: #0f172a; /* အမဲရောင် စာလုံး */
             font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-align: left;
             display: flex;
             align-items: center;
@@ -233,14 +200,19 @@
             width: 100%;
         }
         
-        .choice-btn:hover:not(:disabled) {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            transform: translateY(-3px);
+        .choice-btn:hover {
+            background: #0088cc;
+            border-color: #0088cc;
+            color: white;
+        }
+        
+        .choice-btn:hover .choice-prefix {
+            background: white;
+            color: #0088cc;
         }
         
         .choice-prefix {
-            background: #0f172a;
+            background: #e2e8f0;
             width: 45px;
             height: 45px;
             display: flex;
@@ -248,10 +220,10 @@
             justify-content: center;
             border-radius: 15px;
             font-weight: 800;
-            color: #fbbf24;
+            color: #0f172a;
         }
         
-        /* Result Message */
+        /* Result Box */
         .result-box {
             margin-top: 25px;
             padding: 20px;
@@ -260,13 +232,13 @@
         }
         
         .result-box.correct {
-            background: rgba(34, 197, 94, 0.2);
+            background: #dcfce7;
             border: 2px solid #22c55e;
             display: block;
         }
         
         .result-box.wrong {
-            background: rgba(239, 68, 68, 0.2);
+            background: #fee2e2;
             border: 2px solid #ef4444;
             display: block;
         }
@@ -279,16 +251,26 @@
         .result-title {
             font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .result-title.correct {
+            color: #166534;
+        }
+        
+        .result-title.wrong {
+            color: #991b1b;
         }
         
         .explanation-box {
-            background: #0f172a;
-            padding: 15px;
+            background: #ffffff;
+            padding: 18px;
             border-radius: 15px;
             margin-top: 15px;
             font-size: 1.1rem;
             line-height: 1.6;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
         }
         
         /* Navigation Buttons */
@@ -299,19 +281,18 @@
         }
         
         .nav-btn {
-            background: #1e293b;
-            color: white;
-            border: none;
-            padding: 18px 35px;
+            background: #ffffff;
+            color: #0f172a;
+            border: 2px solid #cbd5e1;
+            padding: 16px 30px;
             border-radius: 50px;
             font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 12px;
-            border: 1px solid #334155;
             flex: 1;
             justify-content: center;
         }
@@ -319,46 +300,52 @@
         .nav-btn:hover:not(:disabled) {
             background: #0088cc;
             border-color: #0088cc;
+            color: white;
         }
         
         .nav-btn:disabled {
-            opacity: 0.3;
+            opacity: 0.4;
             cursor: not-allowed;
+            background: #f1f5f9;
         }
         
-        /* Telegram Footer */
+        /* Telegram Footer - Only @fxkaram */
         .telegram-footer {
             text-align: center;
-            margin-top: 40px;
-            color: #94a3b8;
-            font-size: 1.2rem;
+            margin-top: 30px;
+            padding: 15px;
         }
         
-        .telegram-footer i {
+        .footer-text {
+            color: white; /* အဖြူရောင် စာလုံး (Background အမဲနဲ့ ဆန့်ကျင်ဖက်) */
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .footer-text i {
             color: #0088cc;
-            font-size: 1.8rem;
-            margin: 0 8px;
-            vertical-align: middle;
+            font-size: 2rem;
         }
         
-        .footer-link {
+        .footer-text span {
             color: #0088cc;
-            text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
         }
         
-        .footer-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 700px) {
             .options-container {
                 grid-template-columns: 1fr;
             }
             
             .question-text {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
             
             h1 {
@@ -368,35 +355,42 @@
     </style>
 </head>
 <body>
+    <!-- Background Music (အေးအေးလေး) -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Sound Effects -->
+    <audio id="correctSound">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrongSound">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="bg-animation"></div>
+    
     <div class="container">
-        <!-- Telegram Header -->
+        <!-- Telegram Logo & @fxkaram Only -->
         <div class="telegram-header">
             <i class="fab fa-telegram"></i>
-            <span>FREE EDUCATION <span class="free-edu-badge">MYANMAR</span></span>
-        </div>
-        
-        <!-- Main Title -->
-        <h1>
-            <i class="fas fa-chart-line"></i> 
-            Trading သင်ခန်းစာ
-            <i class="fas fa-bolt"></i>
-        </h1>
-        <div class="subtitle">
-            <i class="fas fa-lightbulb"></i> Flash Cards နည်းဖြင့် လေ့လာကြမယ် (အခု ၅ ခုမြောက်)
+            <div class="fxkaram-text">
+                <span>@</span>fxkaram
+            </div>
         </div>
         
         <!-- Progress Bar -->
         <div class="progress-card">
             <div class="progress-info">
-                <span><i class="fas fa-flag-checkered"></i> မေးခွန်း အမှတ်စဉ်</span>
-                <span id="progress-text">1 / 5</span>
+                <span><i class="fas fa-layer-group" style="color:#0088cc;"></i> သင်ခန်းစာ အမှတ်စဉ်</span>
+                <span id="progress-text">၁ / ၅</span>
             </div>
             <div class="progress-bg">
                 <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
             </div>
         </div>
         
-        <!-- Flash Card Main -->
+        <!-- Flash Card -->
         <div class="flash-card" id="flashCard">
             <div class="card-header">
                 <span class="card-num">
@@ -404,49 +398,69 @@
                     <span id="card-number">၁/၅</span>
                 </span>
                 <span class="topic-badge">
-                    <i class="fas fa-candlestick-chart"></i> 
+                    <i class="fas fa-candlestick-chart" style="color:#0088cc;"></i> 
                     <span id="topic-name">ဖယောင်းတိုင် (Candlestick)</span>
                 </span>
             </div>
             
-            <!-- Question Area -->
+            <!-- Question -->
             <div class="question-box">
                 <div class="question-text" id="question">
-                    ဒီ Chart မှာ ဘာ Pattern ကို မြင်ရပါသလဲ။
+                    ဒီပုံမှာ ဘယ်လို Pattern ကို မြင်ရပါသလဲ။
                 </div>
                 
-                <!-- Chart Area -->
+                <!-- Chart -->
                 <div class="chart-area">
                     <div class="chart-box" id="chartBox">
-                        <!-- Chart will be drawn here by JavaScript -->
+                        <svg width="100%" height="100%" viewBox="0 0 400 200">
+                            <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                            <rect x="120" y="140" width="30" height="50" fill="#ef4444" opacity="0.9" rx="4"/>
+                            <rect x="180" y="70" width="40" height="120" fill="#22c55e" opacity="0.9" rx="4"/>
+                            <text x="150" y="40" fill="#0f172a" font-weight="bold">Bullish Engulfing</text>
+                        </svg>
                     </div>
                     <div class="chart-time">
-                        <i class="far fa-clock"></i> ၁ နာရီပိုင်း (1H Timeframe)
+                        <i class="far fa-clock" style="color:#0088cc;"></i> ၁ နာရီပိုင်း (1H)
                     </div>
                 </div>
             </div>
             
             <!-- Options -->
             <div class="options-container" id="optionsContainer">
-                <!-- Options will be inserted by JavaScript -->
+                <button class="choice-btn" onclick="checkAnswer(0)">
+                    <span class="choice-prefix">က</span>
+                    <span>Bullish Engulfing (အစိမ်းရောင် ဝါးမြိုခြင်း)</span>
+                </button>
+                <button class="choice-btn" onclick="checkAnswer(1)">
+                    <span class="choice-prefix">ခ</span>
+                    <span>Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)</span>
+                </button>
+                <button class="choice-btn" onclick="checkAnswer(2)">
+                    <span class="choice-prefix">ဂ</span>
+                    <span>Doji (ဆုံးဖြတ်ချက်မရှိ)</span>
+                </button>
+                <button class="choice-btn" onclick="checkAnswer(3)">
+                    <span class="choice-prefix">ဃ</span>
+                    <span>Hammer (တူပုံစံ)</span>
+                </button>
             </div>
             
-            <!-- Result Message -->
+            <!-- Result -->
             <div id="resultBox" class="result-box">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <span class="result-icon" id="resultIcon">✅</span>
                     <div>
-                        <div class="result-title" id="resultTitle">မှန်ပါတယ်။</div>
-                        <div id="simpleResult"></div>
+                        <div class="result-title correct" id="resultTitle">မှန်ပါတယ်။</div>
+                        <div id="simpleResult" style="color:#1e293b;"></div>
                     </div>
                 </div>
                 <div class="explanation-box" id="explanation">
-                    <!-- Explanation will appear here -->
+                    <!-- Explanation -->
                 </div>
             </div>
         </div>
         
-        <!-- Navigation Buttons -->
+        <!-- Navigation -->
         <div class="nav-buttons">
             <button class="nav-btn" id="prevBtn" disabled>
                 <i class="fas fa-arrow-left"></i> ရှေ့သို့
@@ -456,16 +470,32 @@
             </button>
         </div>
         
-        <!-- Telegram Footer -->
+        <!-- Telegram Footer - Only @fxkaram -->
         <div class="telegram-footer">
-            <i class="fab fa-telegram"></i> 
-            <a href="#" class="footer-link">t.me/freeeducationmyanmar</a> တွင် ဆက်သွယ်မေးမြန်းနိုင်ပါသည်။
-            <i class="fab fa-telegram"></i>
+            <div class="footer-text">
+                <i class="fab fa-telegram"></i> 
+                <span>@</span>fxkaram
+            </div>
         </div>
     </div>
     
     <script>
-        // Trading Flash Cards Data - မြန်မာလို ရှင်းလင်းချက်များ
+        // Sound Control
+        const bgMusic = document.getElementById('bgMusic');
+        const correctSound = document.getElementById('correctSound');
+        const wrongSound = document.getElementById('wrongSound');
+        
+        // Set volume (အေးအေးလေး)
+        bgMusic.volume = 0.3;
+        correctSound.volume = 0.5;
+        wrongSound.volume = 0.5;
+        
+        // Try to play background music (browser autoplay policy)
+        document.addEventListener('click', function() {
+            bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
+        
+        // Flash Cards Data
         const flashcards = [
             {
                 id: 1,
@@ -473,14 +503,14 @@
                 question: "ဒီပုံမှာ ဘယ်လို Candlestick Pattern ကို မြင်ရပါသလဲ။",
                 chart: "bullish-engulfing",
                 options: [
-                    "Bullish Engulfing (အစိမ်းရောင် ဝါးမြိုခြင်း)",
-                    "Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
-                    "Doji (ဆုံးဖြတ်ချက်မရှိ)",
-                    "Hammer (တူပုံစံ)"
+                    "က. Bullish Engulfing (အစိမ်းရောင် ဝါးမြိုခြင်း)",
+                    "ခ. Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
+                    "ဂ. Doji (ဆုံးဖြတ်ချက်မရှိ)",
+                    "ဃ. Hammer (တူပုံစံ)"
                 ],
-                correct: 0, // ပထမအဖြေ (index 0)
-                explanation: "✅ မှန်ပါတယ်။ ဒါက Bullish Engulfing ပါ။\n\nအကြောင်းက: အနီရောင်ဖယောင်းတိုင်အသေလေးကို အစိမ်းရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားတာကို တွေ့ရမှာပါ။ ဒါက ဝယ်သူတွေ သန်လာပြီဆိုတဲ့ အချက်ပြမှုပါ။ စျေးတက်တော့မယ်လို့ ခန့်မှန်းလို့ရပါတယ်။ 📈",
-                idea: "💡 သိမှတ်ဖွယ်: Bullish Engulfing ဆိုတာ စျေးကျနေတဲ့အချိန်မှာ ရုတ်တရက် ဝယ်အားကောင်းလာတာကိုပြတာပါ။ နောက်နေ့တွေမှာ စျေးတက်နိုင်ခြေများပါတယ်။"
+                correct: 0,
+                explanation: "✅ မှန်ပါတယ်။ Bullish Engulfing ပါ။\n\nအနီရောင်ဖယောင်းတိုင်အသေးလေးကို အစိမ်းရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားတာကို တွေ့ရမှာပါ။ ဒါက ဝယ်သူတွေ သန်လာပြီဆိုတဲ့ အချက်ပြမှုပါ။",
+                idea: "💡 စျေးတက်တော့မယ့် နိမိတ်ကောင်းပါ။"
             },
             {
                 id: 2,
@@ -488,14 +518,14 @@
                 question: "ဒီပုံမှာ ဘယ်လို Reversal Pattern ကို တွေ့ရပါသလဲ။",
                 chart: "bearish-engulfing",
                 options: [
-                    "Bullish Engulfing",
-                    "Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
-                    "Morning Star",
-                    "Evening Star"
+                    "က. Bullish Engulfing",
+                    "ခ. Bearish Engulfing (အနီရောင် ဝါးမြိုခြင်း)",
+                    "ဂ. Morning Star",
+                    "ဃ. Evening Star"
                 ],
                 correct: 1,
-                explanation: "✅ မှန်ပါတယ်။ Bearish Engulfing ပါ။\n\nအကြောင်းက: အစိမ်းရောင်ဖယောင်းတိုင်အသေးကို အနီရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားပါတယ်။ ဒါက ရောင်းသူတွေ သန်လာပြီဆိုတဲ့အချက်ပါ။ စျေးကျတော့မယ့် နိမိတ်ပါပဲ။ 📉",
-                idea: "💡 သိမှတ်ဖွယ်: စျေးတက်နေတဲ့အချိန်မှာ Bearish Engulfing ပေါ်လာရင် သတိထားသင့်ပါတယ်။ အမြတ်ယူဖို့ အချိန်ကောင်းဖြစ်နိုင်ပါတယ်။"
+                explanation: "✅ မှန်ပါတယ်။ Bearish Engulfing ပါ။\n\nအစိမ်းရောင်ဖယောင်းတိုင်အသေးကို အနီရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားပါတယ်။ ဒါက ရောင်းသူတွေ သန်လာပြီဆိုတဲ့အချက်ပါ။",
+                idea: "💡 စျေးကျတော့မယ့် လက္ခဏာပါ။"
             },
             {
                 id: 3,
@@ -503,14 +533,14 @@
                 question: "ဒီပုံမှာ ဘယ်နေရာက Support လိုင်းလဲ။",
                 chart: "support-resistance",
                 options: [
-                    "အနီရောင်မျဉ်း (အောက်ခြေမျဉ်း)",
-                    "အပြာရောင်မျဉ်း (အပေါ်မျဉ်း)",
-                    "အလယ်က မျဉ်း",
-                    "မျဉ်းတွေမရှိဘူး"
+                    "က. အနီရောင်မျဉ်း (အောက်ခြေမျဉ်း)",
+                    "ခ. အပြာရောင်မျဉ်း (အပေါ်မျဉ်း)",
+                    "ဂ. အလယ်က မျဉ်း",
+                    "ဃ. မျဉ်းတွေမရှိဘူး"
                 ],
                 correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ အနီရောင်မျဉ်းက Support ပါ။\n\nအကြောင်းက: Support ဆိုတာ စျေးကျလို့ မကျော်နိုင်တဲ့ အောက်ခြေအဆင့်ပါ။ ဒီနေရာရောက်ရင် ဝယ်သူတွေက ပြန်ဝယ်ကြတယ်။ စျေးပြန်တက်တတ်တယ်။",
-                idea: "💡 သိမှတ်ဖွယ်: Support ကို ချိုးကျရင် စျေးဆက်ကျတတ်တယ်။ Resistance ကို ဖောက်တက်ရင် စျေးဆက်တက်တတ်တယ်။"
+                explanation: "✅ မှန်ပါတယ်။ အနီရောင်မျဉ်းက Support ပါ။\n\nSupport ဆိုတာ စျေးကျလို့ မကျော်နိုင်တဲ့ အောက်ခြေအဆင့်ပါ။",
+                idea: "💡 Support ကို ချိုးရင် စျေးဆက်ကျတတ်တယ်။"
             },
             {
                 id: 4,
@@ -518,14 +548,14 @@
                 question: "ဒီပုံမှာ ဘယ် Chart Pattern ကို တွေ့ရပါသလဲ။",
                 chart: "double-top",
                 options: [
-                    "Double Top (အထွတ်နှစ်ခု)",
-                    "Double Bottom (အခြေနှစ်ခု)",
-                    "Head & Shoulders",
-                    "Triangle"
+                    "က. Double Top (အထွတ်နှစ်ခု)",
+                    "ခ. Double Bottom (အခြေနှစ်ခု)",
+                    "ဂ. Head & Shoulders",
+                    "ဃ. Triangle"
                 ],
                 correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Double Top ပါ။\n\nအကြောင်းက: စျေးက မြင့်တဲ့နေရာနှစ်ခုကို ရိုက်ပြီး ပြန်ကျလာတာကို တွေ့ရမှာပါ။ ဒါက စျေးဆက်ကျတော့မယ့် လက္ခဏာပါ။",
-                idea: "💡 သိမှတ်ဖွယ်: Double Top ပေါ်ရင် ရောင်းဖို့ စဉ်းစားသင့်တယ်။ Double Bottom ပေါ်ရင် ဝယ်ဖို့ စဉ်းစားသင့်တယ်။"
+                explanation: "✅ မှန်ပါတယ်။ Double Top ပါ။\n\nစျေးက မြင့်တဲ့နေရာနှစ်ခုကို ရိုက်ပြီး ပြန်ကျလာတာကို တွေ့ရမှာပါ။",
+                idea: "💡 ရောင်းဖို့ အချက်ပြချက်ပါ။"
             },
             {
                 id: 5,
@@ -533,32 +563,27 @@
                 question: "ဒီပုံမှာ ဘယ်လို Trend မျိုးလဲ။",
                 chart: "uptrend",
                 options: [
-                    "Uptrend (အတက်ဘက်)",
-                    "Downtrend (အကျဘက်)",
-                    "Sideway (ဘေးတိုက်)",
-                    "Trend မရှိဘူး"
+                    "က. Uptrend (အတက်ဘက်)",
+                    "ခ. Downtrend (အကျဘက်)",
+                    "ဂ. Sideway (ဘေးတိုက်)",
+                    "ဃ. Trend မရှိဘူး"
                 ],
                 correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Uptrend ပါ။\n\nအကြောင်းက: စျေးက အနိမ့်အမြင့်တွေ မြင့်လာတာကို တွေ့ရမှာပါ။ Higher High နဲ့ Higher Low ဖြစ်နေတယ်။ ဝယ်ထားသင့်တဲ့ အချိန်ပါ။",
-                idea: "💡 သိမှတ်ဖွယ်: Uptrend ဆိုတာ မိတ်ဆွေပါ။ အတက်လမ်းကြောင်းမှာ ဝယ်တာက အမြတ်ရနိုင်ခြေများတယ်။"
+                explanation: "✅ မှန်ပါတယ်။ Uptrend ပါ။\n\nစျေးက အနိမ့်အမြင့်တွေ မြင့်လာတာကို တွေ့ရမှာပါ။ Higher High နဲ့ Higher Low ဖြစ်နေတယ်။",
+                idea: "💡 Uptrend ဆိုတာ မိတ်ဆွေပါ။"
             }
         ];
         
         let currentCard = 0;
-        let selectedOption = null;
         let answered = false;
         
-        // Load Card Function
         function loadCard(index) {
             const card = flashcards[index];
             
-            // Update headers
             document.getElementById('card-number').innerText = `${index+1}/5`;
             document.getElementById('topic-name').innerText = card.topic;
             document.getElementById('progress-text').innerText = `${index+1} / 5`;
             document.getElementById('progress-fill').style.width = `${((index+1)/5)*100}%`;
-            
-            // Update question
             document.getElementById('question').innerText = card.question;
             
             // Load options
@@ -569,114 +594,101 @@
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 btn.innerHTML = `
-                    <span class="choice-prefix">${String.fromCharCode(65 + i)}</span>
-                    <span>${option}</span>
+                    <span class="choice-prefix">${option.charAt(0)}</span>
+                    <span>${option.substring(2)}</span>
                 `;
                 btn.onclick = () => checkAnswer(i);
                 optionsContainer.appendChild(btn);
             });
             
-            // Draw chart (simplified)
+            // Draw chart
             drawChart(card.chart);
             
-            // Reset result box
+            // Reset result
             document.getElementById('resultBox').className = 'result-box';
             document.getElementById('resultBox').style.display = 'none';
             
-            // Update navigation buttons
             document.getElementById('prevBtn').disabled = index === 0;
             document.getElementById('nextBtn').disabled = index === 4;
             
             answered = false;
-            selectedOption = null;
         }
         
-        // Simple Chart Drawing Function
         function drawChart(type) {
             const chartBox = document.getElementById('chartBox');
             let svg = '';
             
             if(type === 'bullish-engulfing') {
-                svg = `
-                    <svg viewBox="0 0 400 200">
-                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
-                        <rect x="100" y="150" width="30" height="50" fill="#ef4444" opacity="0.8"/>
-                        <rect x="150" y="80" width="40" height="120" fill="#22c55e" opacity="0.9"/>
-                        <text x="200" y="50" fill="white">Bullish Engulfing</text>
-                    </svg>
-                `;
+                svg = `<svg width="100%" height="100%" viewBox="0 0 400 200">
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                    <rect x="120" y="140" width="30" height="50" fill="#ef4444" opacity="0.9" rx="4"/>
+                    <rect x="180" y="70" width="40" height="120" fill="#22c55e" opacity="0.9" rx="4"/>
+                    <text x="140" y="40" fill="#0f172a" font-weight="bold">Bullish Engulfing</text>
+                </svg>`;
             } else if(type === 'bearish-engulfing') {
-                svg = `
-                    <svg viewBox="0 0 400 200">
-                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
-                        <rect x="100" y="100" width="30" height="80" fill="#22c55e" opacity="0.8"/>
-                        <rect x="150" y="130" width="40" height="50" fill="#ef4444" opacity="0.9"/>
-                        <text x="200" y="50" fill="white">Bearish Engulfing</text>
-                    </svg>
-                `;
+                svg = `<svg width="100%" height="100%" viewBox="0 0 400 200">
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                    <rect x="120" y="100" width="30" height="80" fill="#22c55e" opacity="0.8" rx="4"/>
+                    <rect x="180" y="130" width="40" height="50" fill="#ef4444" opacity="0.9" rx="4"/>
+                    <text x="140" y="40" fill="#0f172a" font-weight="bold">Bearish Engulfing</text>
+                </svg>`;
             } else if(type === 'support-resistance') {
-                svg = `
-                    <svg viewBox="0 0 400 200">
-                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
-                        <line x1="50" y1="120" x2="350" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/>
-                        <line x1="50" y1="60" x2="350" y2="60" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
-                        <text x="50" y="100" fill="#ef4444">Support</text>
-                        <text x="50" y="40" fill="#3b82f6">Resistance</text>
-                    </svg>
-                `;
+                svg = `<svg width="100%" height="100%" viewBox="0 0 400 200">
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                    <line x1="50" y1="120" x2="350" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/>
+                    <line x1="50" y1="60" x2="350" y2="60" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="50" y="100" fill="#ef4444">Support</text>
+                    <text x="50" y="40" fill="#3b82f6">Resistance</text>
+                </svg>`;
             } else if(type === 'double-top') {
-                svg = `
-                    <svg viewBox="0 0 400 200">
-                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
-                        <path d="M50,150 L120,50 L190,150 L260,50 L330,150" stroke="#fbbf24" stroke-width="3" fill="none"/>
-                        <text x="200" y="30" fill="white">Double Top</text>
-                    </svg>
-                `;
+                svg = `<svg width="100%" height="100%" viewBox="0 0 400 200">
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                    <path d="M50,150 L120,50 L190,150 L260,50 L330,150" stroke="#fbbf24" stroke-width="3" fill="none"/>
+                    <text x="150" y="30" fill="#0f172a">Double Top</text>
+                </svg>`;
             } else if(type === 'uptrend') {
-                svg = `
-                    <svg viewBox="0 0 400 200">
-                        <line x1="50" y1="180" x2="350" y2="180" stroke="#334155" stroke-width="2"/>
-                        <path d="M50,180 L120,140 L190,100 L260,60 L330,20" stroke="#22c55e" stroke-width="4" fill="none"/>
-                        <text x="200" y="50" fill="white">Uptrend</text>
-                    </svg>
-                `;
+                svg = `<svg width="100%" height="100%" viewBox="0 0 400 200">
+                    <line x1="50" y1="180" x2="350" y2="180" stroke="#cbd5e1" stroke-width="2"/>
+                    <path d="M50,180 L120,140 L190,100 L260,60 L330,20" stroke="#22c55e" stroke-width="4" fill="none"/>
+                    <text x="150" y="40" fill="#0f172a">Uptrend</text>
+                </svg>`;
             }
             
             chartBox.innerHTML = svg;
         }
         
-        // Check Answer Function
         function checkAnswer(selectedIndex) {
             if(answered) return;
             
             const card = flashcards[currentCard];
             const isCorrect = selectedIndex === card.correct;
             
-            // Show result box
+            // Play sound
+            if(isCorrect) {
+                correctSound.play();
+            } else {
+                wrongSound.play();
+            }
+            
+            // Show result
             const resultBox = document.getElementById('resultBox');
             resultBox.className = `result-box ${isCorrect ? 'correct' : 'wrong'}`;
             resultBox.style.display = 'block';
             
-            // Set result content
             document.getElementById('resultIcon').innerText = isCorrect ? '✅' : '❌';
             document.getElementById('resultTitle').innerText = isCorrect ? 'မှန်ပါတယ်။' : 'မှားပါတယ်။';
+            document.getElementById('resultTitle').className = `result-title ${isCorrect ? 'correct' : 'wrong'}`;
             
-            let explanation = isCorrect ? card.explanation : `❌ မှားပါတယ်။ အဖြေမှန်က ${card.options[card.correct]} ပါ။\n\n${card.explanation.replace('✅ မှန်ပါတယ်။', '')}`;
-            
-            // Add idea emoji
+            let explanation = isCorrect ? card.explanation : `မှားပါတယ်။ အဖြေမှန်က ${card.options[card.correct]} ပါ။\n\n${card.explanation}`;
             explanation += `\n\n${card.idea}`;
             
             document.getElementById('explanation').innerText = explanation;
             document.getElementById('simpleResult').innerText = isCorrect ? 'ဂုဏ်ယူပါတယ်။' : 'နောက်တစ်ခါ ကြိုးစားကြည့်ပါ။';
             
-            // Mark as answered
             answered = true;
-            
-            // Play sound effect (simulated)
-            console.log(isCorrect ? '✅ Correct sound' : '❌ Wrong sound');
         }
         
-        // Navigation Functions
+        // Navigation
         document.getElementById('prevBtn').addEventListener('click', () => {
             if(currentCard > 0) {
                 currentCard--;
