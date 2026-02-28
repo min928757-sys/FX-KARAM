@@ -3,167 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading Flash Cards - FX Karam</title>
+<title>FX Karam Flash Cards - Premium</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #0f172a;
-    color: #f1f5f9;
-    text-align: center;
-    padding: 20px;
+body{
+font-family: 'Segoe UI', sans-serif;
+margin:0;
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:#ffffff;
+text-align:center;
 }
 
-.card {
-    background-color: #1e293b;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 500px;
-    margin: auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+.container{
+max-width:520px;
+margin:40px auto;
+background:rgba(0,0,0,0.6);
+padding:25px;
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,0,0,0.8);
+animation:fadeIn 0.6s ease;
 }
 
-img {
-    width: 100%;
-    border-radius: 10px;
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(15px);}
+to{opacity:1; transform:translateY(0);}
 }
 
-button {
-    background-color: #22c55e;
-    color: black;
-    border: none;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
+img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:15px;
+margin-bottom:15px;
 }
 
-button:hover {
-    background-color: #16a34a;
+button{
+padding:10px 14px;
+margin:6px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+background:#00c6ff;
+color:#000;
+transition:0.3s;
 }
 
-#feedback {
-    font-weight: bold;
-    margin-top: 10px;
+button:hover{
+background:#0072ff;
+color:#fff;
 }
 
-#explanation {
-    margin-top: 10px;
-    color: #94a3b8;
+#feedback{
+margin-top:10px;
+font-weight:bold;
 }
 
-.next-btn {
-    background-color: #38bdf8;
+#explanation{
+margin-top:10px;
+font-size:14px;
+color:#cbd5e1;
 }
 
-.footer {
-    margin-top: 30px;
-    font-size: 14px;
+.next-btn{
+background:#facc15;
+}
+
+.footer{
+margin-top:25px;
+font-size:13px;
+opacity:0.8;
+}
+
+.footer img{
+width:18px;
+vertical-align:middle;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-    <h2 id="question"></h2>
-    <img id="image" src="">
-    <div id="choices"></div>
-    <p id="feedback"></p>
-    <p id="explanation"></p>
-    <button class="next-btn" onclick="nextQuestion()">Next</button>
+<div class="container">
+<h2 id="question"></h2>
+<img id="image">
+<div id="choices"></div>
+<p id="feedback"></p>
+<p id="explanation"></p>
+<button class="next-btn" onclick="nextQuestion()">Next</button>
 </div>
 
 <div class="footer">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" width="30">
-    <p>@fxkaram community</p>
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
+ @fxkaram community
 </div>
 
-<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
-<audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
-<audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<!-- Sounds -->
+<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3"></audio>
+<audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+<audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-tone-2870.mp3"></audio>
 <audio id="nextSound" src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3"></audio>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop autoplay>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mp3">
+</audio>
 
 <script>
 const questions = [
 {
-    question: "Forex မှာ Lot Size ဆိုတာဘာလဲ?",
-    image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f",
-    choices: ["Risk Level", "Trade Volume", "Leverage", "Spread"],
-    answer: "Trade Volume",
-    explanation: "Lot Size ဆိုတာ Trade တစ်ခုမှာ ဝယ်/ရောင်းတဲ့ ပမာဏကို ဆိုလိုပါတယ်။"
+q:"Forex မှာ Lot Size ဆိုတာဘာလဲ?",
+img:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
+c:["Risk Level","Trade Volume","Leverage","Spread"],
+a:"Trade Volume",
+e:"Lot Size ဆိုတာ Trade ပမာဏကို ဆိုလိုပါတယ်။"
 },
 {
-    question: "Stop Loss ရဲ့ အဓိက ရည်ရွယ်ချက်ဘာလဲ?",
-    image: "https://images.unsplash.com/photo-1642790105955-6c6a0f327115",
-    choices: ["Profit တိုးရန်", "Loss ကာကွယ်ရန်", "Lot တိုးရန်", "Spread လျော့ရန်"],
-    answer: "Loss ကာကွယ်ရန်",
-    explanation: "Stop Loss သည် မလိုလားအပ်သော Loss များကို ကန့်သတ်ရန် အသုံးပြုသည်။"
+q:"Stop Loss ရဲ့ ရည်ရွယ်ချက်ဘာလဲ?",
+img:"https://images.unsplash.com/photo-1559526324-4b87b5e36e44",
+c:["Profit တိုးရန်","Loss ကာကွယ်ရန်","Spread လျော့ရန်","Indicator ပိုထည့်ရန်"],
+a:"Loss ကာကွယ်ရန်",
+e:"Stop Loss သည် မလိုလားအပ်သော Loss များကို ကန့်သတ်ပေးသည်။"
 },
 {
-    question: "Bullish Market ဆိုတာဘာလဲ?",
-    image: "https://images.unsplash.com/photo-1642790106067-2b61e6c5d7f4",
-    choices: ["ဈေးကျနေသည်", "ဈေးတက်နေသည်", "Sideway", "Stop Market"],
-    answer: "ဈေးတက်နေသည်",
-    explanation: "Bullish ဆိုသည်မှာ Market သည် တက်နေသော Trend ဖြစ်သည်။"
+q:"Bullish Market ဆိုတာဘာလဲ?",
+img:"https://images.unsplash.com/photo-1549421263-7d0f6f38d7e4",
+c:["ဈေးကျနေသည်","ဈေးတက်နေသည်","Sideway","Crash"],
+a:"ဈေးတက်နေသည်",
+e:"Bullish ဆိုသည်မှာ Market သည် တက်နေသော Trend ဖြစ်သည်။"
 },
 {
-    question: "Risk Management မရှိဘူးဆိုရင်ဘာဖြစ်မလဲ?",
-    image: "https://images.unsplash.com/photo-1642790106263-4c0a5e62c54d",
-    choices: ["Profit ပိုများ", "Account ပျက်နိုင်", "Spread လျော့", "Lot လျော့"],
-    answer: "Account ပျက်နိုင်",
-    explanation: "Risk Management မရှိပါက Account ပျက်နိုင်ချေ မြင့်သည်။"
+q:"Risk Management မရှိရင်ဘာဖြစ်မလဲ?",
+img:"https://images.unsplash.com/photo-1605902711622-cfb43c4437b1",
+c:["Account ပျက်နိုင်","Profit ပိုများ","Spread လျော့","Lot တိုး"],
+a:"Account ပျက်နိုင်",
+e:"Risk မထိန်းနိုင်ပါက Account ပျက်နိုင်ချေ မြင့်သည်။"
 },
 {
-    question: "Trading Psychology အရေးကြီးလား?",
-    image: "https://images.unsplash.com/photo-1642790106330-2f6c7c8b3a58",
-    choices: ["မလိုအပ်", "အရေးကြီး", "Lot ပဲလို", "Indicator ပဲလို"],
-    answer: "အရေးကြီး",
-    explanation: "စိတ်ဓာတ်ထိန်းနိုင်မှုသည် Trader အောင်မြင်မှုအတွက် အရေးကြီးဆုံး အချက်ဖြစ်သည်။"
+q:"Trading Psychology အရေးကြီးလား?",
+img:"https://images.unsplash.com/photo-1507679799987-c73779587ccf",
+c:["မလိုအပ်","Indicator ပဲလို","အရေးကြီး","Signal ပဲလို"],
+a:"အရေးကြီး",
+e:"စိတ်ဓာတ်ထိန်းနိုင်မှုသည် Trader အောင်မြင်မှုအတွက် အရေးကြီးဆုံး ဖြစ်သည်။"
 }
 ];
 
-let current = 0;
+let current=0;
+let answered=false;
 
-function loadQuestion() {
-    document.getElementById("question").innerText = questions[current].question;
-    document.getElementById("image").src = questions[current].image;
-    document.getElementById("feedback").innerText = "";
-    document.getElementById("explanation").innerText = "";
-    const choicesDiv = document.getElementById("choices");
-    choicesDiv.innerHTML = "";
-    
-    questions[current].choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.innerText = choice;
-        btn.onclick = () => checkAnswer(choice);
-        choicesDiv.appendChild(btn);
-    });
+function loadQ(){
+answered=false;
+document.getElementById("question").innerText=questions[current].q;
+document.getElementById("image").src=questions[current].img;
+document.getElementById("feedback").innerText="";
+document.getElementById("explanation").innerText="";
+let div=document.getElementById("choices");
+div.innerHTML="";
+questions[current].c.forEach(choice=>{
+let btn=document.createElement("button");
+btn.innerText=choice;
+btn.onclick=()=>check(choice);
+div.appendChild(btn);
+});
 }
 
-function checkAnswer(choice) {
-    document.getElementById("clickSound").play();
-    if (choice === questions[current].answer) {
-        document.getElementById("feedback").innerText = "✔ မှန်ပါတယ်!";
-        document.getElementById("correctSound").play();
-    } else {
-        document.getElementById("feedback").innerText = "✘ မှားပါတယ်!";
-        document.getElementById("wrongSound").play();
-    }
-    document.getElementById("explanation").innerText = questions[current].explanation;
+function check(choice){
+if(answered) return;
+answered=true;
+document.getElementById("clickSound").play();
+if(choice===questions[current].a){
+document.getElementById("feedback").innerText="✔ မှန်ပါတယ်!";
+document.getElementById("correctSound").play();
+}else{
+document.getElementById("feedback").innerText="✘ မှားပါတယ်!";
+document.getElementById("wrongSound").play();
+}
+document.getElementById("explanation").innerText=questions[current].e;
 }
 
-function nextQuestion() {
-    document.getElementById("nextSound").play();
-    current++;
-    if (current >= questions.length) {
-        current = 0;
-    }
-    loadQuestion();
+function nextQuestion(){
+document.getElementById("nextSound").play();
+current++;
+if(current>=questions.length){current=0;}
+loadQ();
 }
 
-loadQuestion();
+loadQ();
 </script>
 
 </body>
