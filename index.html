@@ -1,662 +1,170 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@fxkaram | PRO Trading Cards</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- TradingView Widget Library (Professional) -->
-    <script src="https://s3.tradingview.com/tv.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Padauk', 'Inter', sans-serif;
-            background: #0d1117;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        
-        /* Telegram Header */
-        .telegram-header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 136, 204, 0.3);
-            border-radius: 60px;
-            padding: 12px 28px;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(0,136,204,0.15);
-        }
-        
-        .telegram-header i {
-            font-size: 2.5rem;
-            color: #0088cc;
-            filter: drop-shadow(0 0 10px #0088cc);
-        }
-        
-        .fxkaram-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 1px;
-        }
-        
-        .fxkaram-text span {
-            color: #0088cc;
-        }
-        
-        /* Progress Bar */
-        .progress-section {
-            margin-bottom: 20px;
-        }
-        
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            color: #e2e8f0;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-        
-        .progress-bar-bg {
-            background: #1e293b;
-            height: 10px;
-            border-radius: 50px;
-            overflow: hidden;
-        }
-        
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #0088cc, #3b82f6);
-            width: 20%;
-            border-radius: 50px;
-            position: relative;
-            box-shadow: 0 0 15px #0088cc;
-        }
-        
-        /* Main Card */
-        .card {
-            background: #1a1f2e;
-            border-radius: 40px;
-            padding: 30px;
-            border: 1px solid #2d3748;
-            box-shadow: 0 30px 60px -20px black;
-            margin-bottom: 25px;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .card-number {
-            background: #0088cc;
-            color: white;
-            padding: 8px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .topic-tag {
-            background: #2d3748;
-            color: #fbbf24;
-            padding: 8px 22px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: 1px solid #fbbf24;
-        }
-        
-        /* Question */
-        .question {
-            color: white;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            line-height: 1.4;
-            padding: 0 5px;
-        }
-        
-        /* TradingView Chart Container */
-        .chart-container {
-            background: #0b0f17;
-            border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 25px;
-            border: 1px solid #2d3748;
-            height: 280px;
-            position: relative;
-        }
-        
-        .chart-label {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: rgba(0,136,204,0.2);
-            color: #0088cc;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-            border: 1px solid #0088cc;
-        }
-        
-        /* Options */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 25px 0;
-        }
-        
-        .option {
-            background: #262d3d;
-            border: 2px solid #334155;
-            padding: 18px;
-            border-radius: 20px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-        }
-        
-        .option:hover:not(:disabled) {
-            background: #0088cc;
-            border-color: #0088cc;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px #0088cc;
-        }
-        
-        .option-prefix {
-            background: #1a1f2e;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
-            font-weight: 800;
-            color: #fbbf24;
-            font-size: 1.3rem;
-        }
-        
-        .option:hover .option-prefix {
-            background: white;
-            color: #0088cc;
-        }
-        
-        /* Result Box */
-        .result {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 20px;
-            display: none;
-        }
-        
-        .result.correct {
-            background: rgba(34, 197, 94, 0.15);
-            border: 2px solid #22c55e;
-            display: block;
-        }
-        
-        .result.wrong {
-            background: rgba(239, 68, 68, 0.15);
-            border: 2px solid #ef4444;
-            display: block;
-        }
-        
-        .result-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .result-icon {
-            font-size: 2.5rem;
-        }
-        
-        .result-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .result-title.correct {
-            color: #22c55e;
-        }
-        
-        .result-title.wrong {
-            color: #ef4444;
-        }
-        
-        .explanation {
-            background: #1a1f2e;
-            padding: 18px;
-            border-radius: 15px;
-            color: #e2e8f0;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            border: 1px solid #334155;
-            white-space: pre-line;
-        }
-        
-        /* Navigation */
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .nav-btn {
-            background: #262d3d;
-            border: 1px solid #334155;
-            padding: 16px 30px;
-            border-radius: 50px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            justify-content: center;
-        }
-        
-        .nav-btn:hover:not(:disabled) {
-            background: #0088cc;
-            border-color: #0088cc;
-        }
-        
-        .nav-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            padding: 10px;
-        }
-        
-        .footer-text {
-            color: #94a3b8;
-            font-size: 1.3rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.03);
-            padding: 8px 25px;
-            border-radius: 50px;
-        }
-        
-        .footer-text i {
-            color: #0088cc;
-        }
-        
-        .footer-text span {
-            color: #0088cc;
-            font-weight: 700;
-        }
-        
-        @media (max-width: 700px) {
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .question {
-                font-size: 1.4rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Flash Cards - FX Karam</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0f172a;
+    color: #f1f5f9;
+    text-align: center;
+    padding: 20px;
+}
+
+.card {
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #22c55e;
+    color: black;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #16a34a;
+}
+
+#feedback {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#explanation {
+    margin-top: 10px;
+    color: #94a3b8;
+}
+
+.next-btn {
+    background-color: #38bdf8;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 14px;
+}
+</style>
 </head>
+
 <body>
-    <!-- Background Music (အေးအေးလေး) -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+
+<div class="card">
+    <h2 id="question"></h2>
+    <img id="image" src="">
+    <div id="choices"></div>
+    <p id="feedback"></p>
+    <p id="explanation"></p>
+    <button class="next-btn" onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="footer">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" width="30">
+    <p>@fxkaram community</p>
+</div>
+
+<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
+<audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+<audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<audio id="nextSound" src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3"></audio>
+
+<script>
+const questions = [
+{
+    question: "Forex မှာ Lot Size ဆိုတာဘာလဲ?",
+    image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f",
+    choices: ["Risk Level", "Trade Volume", "Leverage", "Spread"],
+    answer: "Trade Volume",
+    explanation: "Lot Size ဆိုတာ Trade တစ်ခုမှာ ဝယ်/ရောင်းတဲ့ ပမာဏကို ဆိုလိုပါတယ်။"
+},
+{
+    question: "Stop Loss ရဲ့ အဓိက ရည်ရွယ်ချက်ဘာလဲ?",
+    image: "https://images.unsplash.com/photo-1642790105955-6c6a0f327115",
+    choices: ["Profit တိုးရန်", "Loss ကာကွယ်ရန်", "Lot တိုးရန်", "Spread လျော့ရန်"],
+    answer: "Loss ကာကွယ်ရန်",
+    explanation: "Stop Loss သည် မလိုလားအပ်သော Loss များကို ကန့်သတ်ရန် အသုံးပြုသည်။"
+},
+{
+    question: "Bullish Market ဆိုတာဘာလဲ?",
+    image: "https://images.unsplash.com/photo-1642790106067-2b61e6c5d7f4",
+    choices: ["ဈေးကျနေသည်", "ဈေးတက်နေသည်", "Sideway", "Stop Market"],
+    answer: "ဈေးတက်နေသည်",
+    explanation: "Bullish ဆိုသည်မှာ Market သည် တက်နေသော Trend ဖြစ်သည်။"
+},
+{
+    question: "Risk Management မရှိဘူးဆိုရင်ဘာဖြစ်မလဲ?",
+    image: "https://images.unsplash.com/photo-1642790106263-4c0a5e62c54d",
+    choices: ["Profit ပိုများ", "Account ပျက်နိုင်", "Spread လျော့", "Lot လျော့"],
+    answer: "Account ပျက်နိုင်",
+    explanation: "Risk Management မရှိပါက Account ပျက်နိုင်ချေ မြင့်သည်။"
+},
+{
+    question: "Trading Psychology အရေးကြီးလား?",
+    image: "https://images.unsplash.com/photo-1642790106330-2f6c7c8b3a58",
+    choices: ["မလိုအပ်", "အရေးကြီး", "Lot ပဲလို", "Indicator ပဲလို"],
+    answer: "အရေးကြီး",
+    explanation: "စိတ်ဓာတ်ထိန်းနိုင်မှုသည် Trader အောင်မြင်မှုအတွက် အရေးကြီးဆုံး အချက်ဖြစ်သည်။"
+}
+];
+
+let current = 0;
+
+function loadQuestion() {
+    document.getElementById("question").innerText = questions[current].question;
+    document.getElementById("image").src = questions[current].image;
+    document.getElementById("feedback").innerText = "";
+    document.getElementById("explanation").innerText = "";
+    const choicesDiv = document.getElementById("choices");
+    choicesDiv.innerHTML = "";
     
-    <!-- Sound Effects -->
-    <audio id="correctSound">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="wrongSound">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
-    </audio>
-    
-    <div class="container">
-        <!-- Telegram Header -->
-        <div class="telegram-header">
-            <i class="fab fa-telegram"></i>
-            <div class="fxkaram-text">
-                <span>@</span>fxkaram
-            </div>
-        </div>
-        
-        <!-- Progress -->
-        <div class="progress-section">
-            <div class="progress-stats">
-                <span><i class="fas fa-book-open" style="color:#0088cc;"></i> သင်ခန်းစာ</span>
-                <span id="progressText">1/5</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progressBar" style="width: 20%"></div>
-            </div>
-        </div>
-        
-        <!-- Main Card -->
-        <div class="card">
-            <div class="card-header">
-                <span class="card-number">
-                    <i class="fas fa-question"></i> <span id="cardNum">၁/၅</span>
-                </span>
-                <span class="topic-tag" id="topicTag">
-                    <i class="fas fa-chart-line"></i> ဖယောင်းတိုင်
-                </span>
-            </div>
-            
-            <!-- Question -->
-            <div class="question" id="question">
-                ဒီ Chart မှာ ဘယ် Pattern ကို တွေ့ရပါသလဲ။
-            </div>
-            
-            <!-- TradingView Chart (Professional) -->
-            <div class="chart-container">
-                <div class="chart-label" id="chartLabel">
-                    <i class="fas fa-chart-simple"></i> BTC/USDT • 1H
-                </div>
-                <div id="tradingview_chart" style="height: 100%; width: 100%;"></div>
-            </div>
-            
-            <!-- Options -->
-            <div class="options-grid" id="optionsContainer"></div>
-            
-            <!-- Result -->
-            <div id="resultBox" class="result">
-                <div class="result-header">
-                    <span class="result-icon" id="resultIcon">✅</span>
-                    <span class="result-title correct" id="resultTitle">မှန်ပါတယ်။</span>
-                </div>
-                <div class="explanation" id="explanation"></div>
-            </div>
-        </div>
-        
-        <!-- Navigation -->
-        <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" disabled>
-                <i class="fas fa-arrow-left"></i> ရှေ့သို့
-            </button>
-            <button class="nav-btn" id="nextBtn">
-                နောက်သို့ <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <div class="footer-text">
-                <i class="fab fa-telegram"></i> <span>@</span>fxkaram
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // Sound System
-        const bgMusic = document.getElementById('bgMusic');
-        const correctSound = document.getElementById('correctSound');
-        const wrongSound = document.getElementById('wrongSound');
-        
-        bgMusic.volume = 0.2;
-        correctSound.volume = 0.5;
-        wrongSound.volume = 0.5;
-        
-        // Auto-play music when user interacts
-        document.addEventListener('click', function initAudio() {
-            bgMusic.play().catch(() => {});
-            document.removeEventListener('click', initAudio);
-        }, { once: true });
-        
-        // Trading Flash Cards Data (with Real Chart Symbols)
-        const flashcards = [
-            {
-                id: 1,
-                topic: "ဖယောင်းတိုင် (Candlestick)",
-                question: "ဒီ Chart မှာ ဘယ် Bullish Reversal Pattern ကို တွေ့ရပါသလဲ။",
-                symbol: "BINANCE:BTCUSDT",
-                interval: "60",
-                pattern: "Bullish Engulfing",
-                options: [
-                    "က. Bullish Engulfing",
-                    "ခ. Bearish Engulfing", 
-                    "ဂ. Morning Star",
-                    "ဃ. Hammer"
-                ],
-                correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Bullish Engulfing ပါ။\n\nအနီရောင်ဖယောင်းတိုင်အသေးကို အစိမ်းရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားတာကို တွေ့ရပါမယ်။ ဒါက ဝယ်အားကောင်းလာတဲ့အချက်ပါ။\n\n💡 စျေးတက်နိုင်ခြေများတယ်။"
-            },
-            {
-                id: 2,
-                topic: "ဖယောင်းတိုင် (Candlestick)",
-                question: "ဒီ Chart မှာ ဘယ် Bearish Reversal Pattern ကို တွေ့ရပါသလဲ။",
-                symbol: "BINANCE:ETHUSDT",
-                interval: "60",
-                pattern: "Bearish Engulfing",
-                options: [
-                    "က. Bullish Engulfing",
-                    "ခ. Bearish Engulfing",
-                    "ဂ. Evening Star",
-                    "ဃ. Shooting Star"
-                ],
-                correct: 1,
-                explanation: "✅ မှန်ပါတယ်။ Bearish Engulfing ပါ။\n\nအစိမ်းရောင်ဖယောင်းတိုင်အသေးကို အနီရောင်ဖယောင်းတိုင်အကြီးက ဝါးမြိုထားတယ်။ ရောင်းအားကောင်းလာတဲ့အချက်ပါ။\n\n💡 စျေးကျနိုင်ခြေများတယ်။"
-            },
-            {
-                id: 3,
-                topic: "Support & Resistance",
-                question: "ဒီ Chart မှာ Support နဲ့ Resistance ကို ခွဲခြားနိုင်ပါသလား။",
-                symbol: "FOREXCOM:USDJPY",
-                interval: "240",
-                pattern: "Support Resistance",
-                options: [
-                    "က. Support က အောက်ခြေမျဉ်း",
-                    "ခ. Resistance က အောက်ခြေမျဉ်း",
-                    "ဂ. နှစ်ခုလုံးက Trendline",
-                    "ဃ. ဘာမှမဟုတ်ဘူး"
-                ],
-                correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Support က အောက်ခြေမျဉ်းပါ။\n\nSupport ဆိုတာ စျေးကျလို့ မကျော်နိုင်တဲ့ အောက်ခြေအဆင့်။ Resistance က အပေါ်ကမျဉ်း။\n\n💡 Support ချိုးရင် ဆက်ကျ၊ Resistance ဖောက်ရင် ဆက်တက်။"
-            },
-            {
-                id: 4,
-                topic: "Chart Patterns",
-                question: "ဒီ Chart မှာ ဘယ် Pattern ဖြစ်ပေါ်နေပါသလဲ။",
-                symbol: "BINANCE:SOLUSDT",
-                interval: "120",
-                pattern: "Double Top",
-                options: [
-                    "က. Double Top",
-                    "ခ. Double Bottom",
-                    "ဂ. Head & Shoulders",
-                    "ဃ. Triangle"
-                ],
-                correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Double Top ပါ။\n\nစျေးက မြင့်တဲ့နေရာနှစ်ခုကို ရိုက်ပြီး ပြန်ကျလာတယ်။ ဆက်ကျနိုင်တဲ့ Pattern ပါ။\n\n💡 ရောင်းဖို့ အချက်ပြချက်။"
-            },
-            {
-                id: 5,
-                topic: "Trend Analysis",
-                question: "ဒီ Chart ရဲ့ Trend က ဘယ်လိုမျိုးလဲ။",
-                symbol: "NASDAQ:TSLA",
-                interval: "D",
-                pattern: "Uptrend",
-                options: [
-                    "က. Uptrend",
-                    "ခ. Downtrend",
-                    "ဂ. Sideways",
-                    "ဃ. Trend မရှိ"
-                ],
-                correct: 0,
-                explanation: "✅ မှန်ပါတယ်။ Uptrend ပါ။\n\nHigher High နဲ့ Higher Low တွေဖြစ်နေတယ်။ အတက်လမ်းကြောင်းဆိုတာ မိတ်ဆွေပါ။\n\n💡 ဝယ်ဖို့ အချက်ပြချက်။"
-            }
-        ];
-        
-        let currentCard = 0;
-        let answered = false;
-        let chartWidget = null;
-        
-        // Load TradingView Chart
-        function loadTradingView(symbol, interval) {
-            const container = document.getElementById('tradingview_chart');
-            container.innerHTML = ''; // Clear previous chart
-            
-            if (typeof TradingView !== 'undefined') {
-                chartWidget = new TradingView.widget({
-                    "width": "100%",
-                    "height": "100%",
-                    "symbol": symbol,
-                    "interval": interval,
-                    "timezone": "Asia/Yangon",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "en",
-                    "toolbar_bg": "#0b0f17",
-                    "enable_publishing": false,
-                    "hide_top_toolbar": true,
-                    "hide_side_toolbar": false,
-                    "allow_symbol_change": false,
-                    "save_image": false,
-                    "studies": [
-                        "Volume@tv-basicstudies"
-                    ],
-                    "container_id": "tradingview_chart"
-                });
-            }
-        }
-        
-        // Load Card
-        function loadCard(index) {
-            const card = flashcards[index];
-            
-            // Update UI
-            document.getElementById('cardNum').innerText = `${index+1}/၅`;
-            document.getElementById('topicTag').innerHTML = `<i class="fas fa-chart-line"></i> ${card.topic}`;
-            document.getElementById('question').innerText = card.question;
-            document.getElementById('progressText').innerText = `${index+1}/5`;
-            document.getElementById('progressBar').style.width = `${((index+1)/5)*100}%`;
-            document.getElementById('chartLabel').innerHTML = `<i class="fas fa-chart-simple"></i> ${card.symbol} • ${card.interval === '60' ? '1H' : card.interval === '240' ? '4H' : card.interval === 'D' ? '1D' : '2H'}`;
-            
-            // Load TradingView Chart
-            loadTradingView(card.symbol, card.interval);
-            
-            // Load Options
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-            
-            card.options.forEach((option, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option';
-                btn.innerHTML = `
-                    <span class="option-prefix">${option.charAt(0)}</span>
-                    <span>${option.substring(2)}</span>
-                `;
-                btn.onclick = () => checkAnswer(i);
-                optionsContainer.appendChild(btn);
-            });
-            
-            // Reset Result
-            document.getElementById('resultBox').className = 'result';
-            document.getElementById('resultBox').style.display = 'none';
-            
-            // Navigation Buttons
-            document.getElementById('prevBtn').disabled = index === 0;
-            document.getElementById('nextBtn').disabled = index === 4;
-            
-            answered = false;
-        }
-        
-        // Check Answer
-        function checkAnswer(selectedIndex) {
-            if (answered) return;
-            
-            const card = flashcards[currentCard];
-            const isCorrect = selectedIndex === card.correct;
-            
-            // Play Sound
-            if (isCorrect) {
-                correctSound.play();
-            } else {
-                wrongSound.play();
-            }
-            
-            // Show Result
-            const resultBox = document.getElementById('resultBox');
-            resultBox.className = `result ${isCorrect ? 'correct' : 'wrong'}`;
-            resultBox.style.display = 'block';
-            
-            document.getElementById('resultIcon').innerText = isCorrect ? '✅' : '❌';
-            document.getElementById('resultTitle').innerText = isCorrect ? 'မှန်ပါတယ်။' : 'မှားပါတယ်။';
-            document.getElementById('resultTitle').className = `result-title ${isCorrect ? 'correct' : 'wrong'}`;
-            
-            let explanation = isCorrect ? card.explanation : `မှားပါတယ်။ အဖြေမှန်က ${card.options[card.correct]} ပါ။\n\n${card.explanation}`;
-            document.getElementById('explanation').innerText = explanation;
-            
-            answered = true;
-        }
-        
-        // Navigation
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            if (currentCard > 0) {
-                currentCard--;
-                loadCard(currentCard);
-            }
-        });
-        
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            if (currentCard < 4) {
-                currentCard++;
-                loadCard(currentCard);
-            }
-        });
-        
-        // Load First Card
-        loadCard(0);
-    </script>
+    questions[current].choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.innerText = choice;
+        btn.onclick = () => checkAnswer(choice);
+        choicesDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(choice) {
+    document.getElementById("clickSound").play();
+    if (choice === questions[current].answer) {
+        document.getElementById("feedback").innerText = "✔ မှန်ပါတယ်!";
+        document.getElementById("correctSound").play();
+    } else {
+        document.getElementById("feedback").innerText = "✘ မှားပါတယ်!";
+        document.getElementById("wrongSound").play();
+    }
+    document.getElementById("explanation").innerText = questions[current].explanation;
+}
+
+function nextQuestion() {
+    document.getElementById("nextSound").play();
+    current++;
+    if (current >= questions.length) {
+        current = 0;
+    }
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+
 </body>
 </html>
