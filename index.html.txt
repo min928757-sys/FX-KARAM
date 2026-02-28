@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading Patterns</title>
+    <style>
+        body { background: #0b0e11; color: #eaecef; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #1e2329; border-radius: 15px; padding: 20px; border: 1px solid #f0b90b; max-width: 350px; margin: auto; }
+        .chart-placeholder { width: 100%; height: 200px; background: #2b3139; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-radius: 10px; font-weight: bold; color: #f0b90b; }
+        button { background: #f0b90b; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin: 5px; }
+        .result { margin-top: 15px; display: none; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>AI Pattern Master</h2>
+    <div id="game-container">
+        <div class="card">
+            <div id="pattern-name" class="chart-placeholder">Loading Pattern...</div>
+            <p>What is this pattern signal?</p>
+            <button onclick="checkAnswer('Buy')">BULLISH (BUY)</button>
+            <button onclick="checkAnswer('Sell')">BEARISH (SELL)</button>
+            <div id="result-box" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const patterns = [
+            { name: "Hammer Candle", type: "Buy", ai: "AI Summary: This shows buyers are rejecting lower prices. Potential reversal." },
+            { name: "Shooting Star", type: "Sell", ai: "AI Summary: Sellers pushed price down from the top. Bearish signal." }
+        ];
+        let current = 0;
+
+        function checkAnswer(choice) {
+            const res = document.getElementById('result-box');
+            res.style.display = "block";
+            if(choice === patterns[current].type) {
+                res.innerHTML = "✅ Correct! <br><small>" + patterns[current].ai + "</small>";
+                res.style.background = "#2ebd85";
+            } else {
+                res.innerHTML = "❌ Wrong! <br><small>" + patterns[current].ai + "</small>";
+                res.style.background = "#f6465d";
+            }
+        }
+    </script>
+</body>
+</html>
