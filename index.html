@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FXKaram Pro Trader Challenge</title>
+<title>FXKaram Pro Trader</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{
 margin:0;
 font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#141e30,#243b55);
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-overflow:hidden;
 }
 
 .card{
@@ -40,11 +38,8 @@ background:#00f5ff;
 color:black;
 font-weight:600;
 cursor:pointer;
-transition:0.3s;
 width:100%;
 }
-
-button:hover{transform:scale(1.05);}
 
 .answers{
 display:grid;
@@ -52,34 +47,20 @@ grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
-.correct{background:#22c55e !important;color:black;}
-.wrong{background:#ef4444 !important;color:white;}
+.correct{background:#22c55e !important;}
+.wrong{background:#ef4444 !important;}
 
-.progress{
-height:6px;
-background:rgba(255,255,255,0.2);
-border-radius:10px;
-margin-bottom:15px;
-}
-
-.bar{
-height:6px;
-background:#00f5ff;
-width:0%;
-border-radius:10px;
-transition:0.4s;
-}
+.hidden{display:none;}
 
 .footer{
 position:absolute;
-bottom:12px;
+bottom:10px;
 font-size:12px;
 opacity:0.7;
 }
 
-.footer img{width:16px;vertical-align:middle;}
+.footer img{width:15px;}
 canvas{margin-top:15px;}
-.hidden{display:none;}
 </style>
 </head>
 
@@ -87,28 +68,24 @@ canvas{margin-top:15px;}
 
 <div class="card">
 
-<!-- START PAGE -->
 <div id="startPage">
 <h2>🔥 Pro Trader Challenge</h2>
 <button onclick="toggleSound()" id="soundBtn">🔊 Sound ON</button>
-<button onclick="startQuiz()">Start Challenge</button>
+<button onclick="startQuiz()">Start</button>
 </div>
 
-<!-- QUIZ PAGE -->
 <div id="quizPage" class="hidden">
-<div class="progress"><div class="bar" id="bar"></div></div>
 <h3 id="question"></h3>
 <div class="answers" id="answers"></div>
 <div id="explanation" style="margin-top:10px;color:#cbd5e1;"></div>
 <button onclick="nextQ()">Next</button>
 </div>
 
-<!-- RESULT PAGE -->
 <div id="resultPage" class="hidden">
 <h2>Final Result</h2>
 <h3 id="scoreText"></h3>
 <h3 id="levelText"></h3>
-<canvas id="chart"></canvas>
+<canvas id="chart" width="350" height="200"></canvas>
 <button onclick="restart()">Restart</button>
 </div>
 
@@ -120,7 +97,7 @@ canvas{margin-top:15px;}
 </div>
 
 <!-- AUDIO -->
-<audio id="bgMusic" loop>
+<audio id="bgMusic" loop preload="auto">
 <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_946c1e9f31.mp3">
 </audio>
 <audio id="click" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3"></audio>
@@ -129,22 +106,31 @@ canvas{margin-top:15px;}
 
 <script>
 let soundOn=true;
+let unlocked=false;
 let score=0;
 let index=0;
-let answered=false;
+let results=[];
+
+document.body.addEventListener("click", unlockAudio, {once:true});
+
+function unlockAudio(){
+document.getElementById("bgMusic").volume=0.2;
+if(soundOn){
+document.getElementById("bgMusic").play();
+}
+unlocked=true;
+}
 
 function toggleSound(){
 soundOn=!soundOn;
 document.getElementById("soundBtn").innerText=soundOn?"🔊 Sound ON":"🔇 Sound OFF";
+if(unlocked){
 if(soundOn){document.getElementById("bgMusic").play();}
 else{document.getElementById("bgMusic").pause();}
 }
+}
 
 function startQuiz(){
-if(soundOn){
-document.getElementById("bgMusic").volume=0.2;
-document.getElementById("bgMusic").play();
-}
 document.getElementById("startPage").classList.add("hidden");
 document.getElementById("quizPage").classList.remove("hidden");
 loadQ();
@@ -152,40 +138,26 @@ loadQ();
 
 const data=[
 {
-q:"True Break of Structure ဖြစ်ဖို့?",
-a:["Wick Break","Close Break + Liquidity Sweep","Indicator","Random"],
-c:"Close Break + Liquidity Sweep",
-e:"Liquidity ကို sweep လုပ်ပြီး candle close နဲ့ break ဖြစ်ရပါတယ်။"
+q:"Liquidity Sweep ဖြစ်ပြီး Close Break ဖြစ်မှဘာဖြစ်သလဲ?",
+a:["True BOS","Fake","Random","Indicator"],
+c:"True BOS",
+e:"Sweep + Close Break ဖြစ်မှ valid structure break ဖြစ်ပါတယ်။"
 },
 {
-q:"RRR 1:4 Setup သုံးရတဲ့အကြောင်း?",
-a:["Win Rate မြင့်","Low Risk High Reward","Lot ကြီး","Scalp"],
-c:"Low Risk High Reward",
-e:"Long term consistency အတွက် RR မြင့် setup လိုအပ်ပါတယ်။"
+q:"RRR 1:3 ကိုဘာကြောင့် Pro Trader သုံးသလဲ?",
+a:["Risk နည်း Reward များ","Lot ကြီး","Win Rate 100%","Indicator"],
+c:"Risk နည်း Reward များ",
+e:"Low Risk High Reward Model သည် Long term survive လုပ်စေသည်။"
 },
 {
 q:"Equal High တွေဘာကိုဆိုလို?",
-a:["Resistance","Liquidity Pool","Trend End","Random"],
-c:"Liquidity Pool",
-e:"Stop Loss များစုနေသောနေရာဖြစ်နိုင်ပါတယ်။"
-},
-{
-q:"Mitigation Block မစောင့်ဘဲဝင်ရင်?",
-a:["False Entry","ပိုမြန်","Spread လျော့","Profit ပို"],
-c:"False Entry",
-e:"Mitigation မပြီးသေးရင် trap ဖြစ်နိုင်ပါတယ်။"
-},
-{
-q:"Pro Trader ရဲ့ Core Skill?",
-a:["Emotion Control","Signal","Leverage","Bot"],
-c:"Emotion Control",
-e:"Psychology မထိန်းနိုင်ရင် long term survive မရပါ။"
+a:["Liquidity","Trend End","Random","Spread"],
+c:"Liquidity",
+e:"Stop Loss များစုနေသောနေရာဖြစ်သည်။"
 }
 ];
 
 function loadQ(){
-answered=false;
-document.getElementById("bar").style.width=(index/data.length)*100+"%";
 document.getElementById("question").innerText=data[index].q;
 document.getElementById("explanation").innerText="";
 let ans=document.getElementById("answers");
@@ -199,17 +171,19 @@ ans.appendChild(btn);
 }
 
 function check(btn,choice){
-if(answered) return;
-answered=true;
 if(soundOn) document.getElementById("click").play();
+
 if(choice===data[index].c){
 btn.classList.add("correct");
 score++;
+results.push(1);
 if(soundOn) document.getElementById("correct").play();
 }else{
 btn.classList.add("wrong");
+results.push(0);
 if(soundOn) document.getElementById("wrong").play();
 }
+
 document.getElementById("explanation").innerText=data[index].e;
 }
 
@@ -229,37 +203,36 @@ document.getElementById("resultPage").classList.remove("hidden");
 document.getElementById("scoreText").innerText="Score: "+score+" / "+data.length;
 
 let level="";
-if(score<=2) level="Beginner";
-else if(score==3) level="Skilled";
-else if(score==4) level="Pro Trader";
-else level="Market Assassin 🔥";
+if(score==data.length) level="Market Assassin 🔥";
+else if(score>=2) level="Pro Trader";
+else level="Still Learning";
 
 document.getElementById("levelText").innerText="Level: "+level;
 
-new Chart(document.getElementById("chart"),{
-type:'line',
-data:{
-labels:["Q1","Q2","Q3","Q4","Q5"],
-datasets:[{
-label:"Performance",
-data:Array.from({length:data.length},(_,i)=>i<score?1:0),
-borderColor:"#00f5ff",
-backgroundColor:"rgba(0,245,255,0.2)",
-tension:0.4
-}]
-},
-options:{
-scales:{y:{min:0,max:1,ticks:{stepSize:1}}},
-plugins:{legend:{display:false}}
+drawChart();
 }
-});
+
+function drawChart(){
+let canvas=document.getElementById("chart");
+let ctx=canvas.getContext("2d");
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.beginPath();
+ctx.moveTo(20,180);
+
+for(let i=0;i<results.length;i++){
+let x=20+(i*100);
+let y=results[i]?50:150;
+ctx.lineTo(x,y);
+}
+
+ctx.strokeStyle="#00f5ff";
+ctx.lineWidth=3;
+ctx.stroke();
 }
 
 function restart(){
-score=0;
-index=0;
-document.getElementById("resultPage").classList.add("hidden");
-document.getElementById("startPage").classList.remove("hidden");
+location.reload();
 }
 </script>
 
