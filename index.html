@@ -3,232 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professor Pro - Interactive Flashcard</title>
+    <title>Flashcard Project</title>
     <style>
-        :root {
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-        }
-
+        /* --- ဒါက CSS (အလှပြင်တာ) --- */
         body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: #0f2027;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
         }
 
-        /* Atom Background */
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-
-        /* Sound Control Button */
-        .controls {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            z-index: 100;
-        }
-
-        #musicBtn {
-            padding: 12px 24px;
-            border-radius: 50px;
-            border: 2px solid var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        #musicBtn.active {
-            background: var(--primary);
-            box-shadow: 0 0 20px var(--primary);
-            transform: scale(1.05);
-        }
-
-        /* Flashcard Design */
-        .card-container {
-            perspective: 1000px;
+        .flashcard-container {
+            width: 300px;
+            height: 200px;
+            perspective: 1000px; /* 3D effect ပေါ်အောင် */
             cursor: pointer;
         }
 
-        .card {
-            width: 350px;
-            height: 250px;
+        .flashcard {
+            width: 100%;
+            height: 100%;
             position: relative;
+            transition: transform 0.6s;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
         }
 
-        .card.flipped { transform: rotateY(180deg); }
+        /* JavaScript က 'flipped' class ထည့်လိုက်ရင် လှည့်သွားအောင် */
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
 
-        .card-face {
+        .front, .back {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
+            backface-visibility: hidden; /* အနောက်ဖက်ကို ဖုံးထားတာ */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            color: white;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
             text-align: center;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            padding: 20px;
         }
 
-        .card-back {
+        .front {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .back {
+            background-color: #007bff;
+            color: white;
             transform: rotateY(180deg);
-            background: linear-gradient(145deg, #00d2ff, #3a7bd5);
-        }
-
-        h2 { margin: 0 0 10px 0; color: var(--primary); }
-        .card-back h2 { color: white; }
-
-        /* Bubble Animation */
-        .bubble {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: radial-gradient(circle, #fff, var(--primary));
-            border-radius: 50%;
-            pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
-        }
-
-        @keyframes floatUp {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: translateY(-120px) scale(2.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="controls">
-        <button id="musicBtn" onclick="toggleAllSounds()">🎵 START STUDYING</button>
-    </div>
-
-    <canvas id="canvas"></canvas>
-
-    <div class="card-container" onclick="handleCardClick(event)">
-        <div class="card" id="mainCard">
-            <div class="card-face card-front">
-                <h2>Quick Quiz</h2>
-                <p>What are the three main subatomic particles?</p>
-                <small style="margin-top:20px; color: #00d2ff;">Click to Flip</small>
+    <div class="flashcard-container" onclick="flipCard()">
+        <div class="flashcard" id="card">
+            <div class="front">
+                Apple ဆိုတာ ဘာလဲ?
             </div>
-            <div class="card-face card-back">
-                <h2>Answer</h2>
-                <p>Protons, Neutrons, and Electrons</p>
+            <div class="back">
+                ပန်းသီး ဖြစ်ပါတယ်! 🍎
             </div>
         </div>
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundjay.com/free-music/sounds/dream-raid-01.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="popSound">
-        <source src="https://www.soundjay.com/buttons/sounds/button-20.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
-        let soundsActive = false;
-        const bgMusic = document.getElementById('bgMusic');
-        const popSound = document.getElementById('popSound');
-        const musicBtn = document.getElementById('musicBtn');
-
-        // Background music volume ကို ဖြည်းဖြည်းလေးပဲ ထားမယ် (အနှောင့်အယှက်မဖြစ်အောင်)
-        bgMusic.volume = 0.3;
-
-        function toggleAllSounds() {
-            if (!soundsActive) {
-                bgMusic.play();
-                musicBtn.innerText = "🔊 MUSIC: ON";
-                musicBtn.classList.add('active');
-                soundsActive = true;
-            } else {
-                bgMusic.pause();
-                musicBtn.innerText = "🎵 MUSIC: OFF";
-                musicBtn.classList.remove('active');
-                soundsActive = false;
-            }
+        /* --- ဒါက JavaScript (အလုပ်လုပ်ပုံ) --- */
+        function flipCard() {
+            const card = document.getElementById('card');
+            // 'flipped' ဆိုတဲ့ class ကို ရှိရင်ဖြုတ်၊ မရှိရင် ထည့်ပေးတာ (Toggle)
+            card.classList.toggle('flipped');
         }
-
-        function handleCardClick(e) {
-            document.getElementById('mainCard').classList.toggle('flipped');
-            createBubble(e.clientX, e.clientY);
-            
-            if (soundsActive) {
-                popSound.currentTime = 0;
-                popSound.play();
-            }
-        }
-
-        function createBubble(x, y) {
-            for(let i=0; i<3; i++) { // နှိပ်လိုက်ရင် bubble ၃ ခု ထွက်လာအောင်
-                const b = document.createElement('div');
-                b.className = 'bubble';
-                b.style.left = (x + (Math.random() * 20 - 10)) + 'px';
-                b.style.top = (y + (Math.random() * 20 - 10)) + 'px';
-                document.body.appendChild(b);
-                setTimeout(() => b.remove(), 1000);
-            }
-        }
-
-        // --- Atom Particle System ---
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let dots = [];
-
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            dots = [];
-            for (let i = 0; i < 70; i++) {
-                dots.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 2 + 0.5,
-                    dx: (Math.random() - 0.5) * 0.4,
-                    dy: (Math.random() - 0.5) * 0.4
-                });
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(0, 210, 255, 0.3)";
-            dots.forEach(d => {
-                d.x += d.dx;
-                d.y += d.dy;
-                if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
-                if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
-                ctx.beginPath();
-                ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-                ctx.fill();
-            });
-            requestAnimationFrame(draw);
-        }
-
-        window.addEventListener('resize', init);
-        init();
-        draw();
     </script>
+
 </body>
 </html>
