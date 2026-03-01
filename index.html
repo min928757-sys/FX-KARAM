@@ -3,87 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Project</title>
+    <title>Protected Flashcards</title>
     <style>
-        /* --- ဒါက CSS (အလှပြင်တာ) --- */
+        /* --- CSS ပိုင်း --- */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            font-family: sans-serif;
             margin: 0;
         }
 
-        .flashcard-container {
-            width: 300px;
-            height: 200px;
-            perspective: 1000px; /* 3D effect ပေါ်အောင် */
+        /* Login Form Box */
+        #login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        .flashcard {
-            width: 100%;
-            height: 100%;
+        /* Flashcard ကို အစပိုင်းမှာ ဖျောက်ထားမယ် */
+        #flashcard-content {
+            display: none;
+        }
+
+        /* Flashcard Design */
+        .card {
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            width: 100%; height: 100%;
             position: relative;
             transition: transform 0.6s;
             transform-style: preserve-3d;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             border-radius: 15px;
         }
-
-        /* JavaScript က 'flipped' class ထည့်လိုက်ရင် လှည့်သွားအောင် */
-        .flashcard.flipped {
-            transform: rotateY(180deg);
-        }
-
+        .card-inner.flipped { transform: rotateY(180deg); }
         .front, .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden; /* အနောက်ဖက်ကို ဖုံးထားတာ */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 15px; font-size: 22px; font-weight: bold;
         }
-
-        .front {
-            background-color: #ffffff;
-            color: #333;
-        }
-
-        .back {
-            background-color: #007bff;
-            color: white;
-            transform: rotateY(180deg);
-        }
+        .front { background: white; color: #333; }
+        .back { background: #007bff; color: white; transform: rotateY(180deg); }
     </style>
 </head>
 <body>
 
-    <div class="flashcard-container" onclick="flipCard()">
-        <div class="flashcard" id="card">
-            <div class="front">
-                Apple ဆိုတာ ဘာလဲ?
-            </div>
-            <div class="back">
-                ပန်းသီး ဖြစ်ပါတယ်! 🍎
+    <div id="login-form">
+        <h3>Login to see Flashcards</h3>
+        <input type="text" id="username" placeholder="Username (admin)">
+        <input type="password" id="password" placeholder="Password (1234)">
+        <button onclick="checkLogin()">Login</button>
+        <p id="error" style="color:red; font-size: 12px;"></p>
+    </div>
+
+    <div id="flashcard-content">
+        <div class="card" onclick="this.querySelector('.card-inner').classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="front">What is HTML?</div>
+                <div class="back">Structure of Web 🏗️</div>
             </div>
         </div>
+        <br>
+        <button onclick="location.reload()" style="background:#6c757d">Logout</button>
     </div>
 
     <script>
-        /* --- ဒါက JavaScript (အလုပ်လုပ်ပုံ) --- */
-        function flipCard() {
-            const card = document.getElementById('card');
-            // 'flipped' ဆိုတဲ့ class ကို ရှိရင်ဖြုတ်၊ မရှိရင် ထည့်ပေးတာ (Toggle)
-            card.classList.toggle('flipped');
+        /* --- JavaScript ပိုင်း --- */
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            // Username က admin ဖြစ်ရမယ်၊ Password က 1234 ဖြစ်ရမယ် (ဒါကို ကြိုက်သလို ပြင်နိုင်ပါတယ်)
+            if (user === "admin" && pass === "1234") {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('flashcard-content').style.display = 'block';
+            } else {
+                document.getElementById('error').innerText = "Username သို့မဟုတ် Password မှားနေပါတယ်!";
+            }
         }
     </script>
 
