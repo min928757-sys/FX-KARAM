@@ -9,13 +9,13 @@
         :root {
             --glass: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.2);
-            --tint: rgba(0, 0, 0, 0.5);
+            --tint: rgba(0, 0, 0, 0.55);
         }
 
         body {
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(var(--tint), var(--tint)), 
                         url('https://images.unsplash.com/photo-1611974717482-48a9493d837a?q=80&w=2070&auto=format&fit=crop');
             background-size: cover; background-position: center;
@@ -33,17 +33,27 @@
             position: relative; z-index: 5;
         }
 
-        /* Question & Option Style */
+        .hidden { display: none; }
+
+        /* Music Toggle Button */
+        #music-control {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white; padding: 10px 20px;
+            border-radius: 50px; cursor: pointer;
+            margin: 20px 0; display: inline-flex; align-items: center; gap: 10px;
+            transition: 0.3s;
+        }
+        #music-control.playing { background: #27ae60; border-color: #2ecc71; }
+
         .option-btn {
             width: 100%; padding: 14px; margin: 8px 0;
             border: none; border-radius: 12px;
             background: rgba(255,255,255,0.95); color: #2c3e50;
-            font-weight: 600; cursor: pointer;
-            transition: 0.2s; text-align: left;
+            font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left;
         }
-        .option-btn:active { transform: scale(0.95); background: #e0e0e0; }
+        .option-btn:active { transform: scale(0.95); }
 
-        /* Swoosh Explanation Box */
         #explanation-box {
             position: absolute; bottom: -100%; left: 0; width: 100%;
             background: #ffffff; color: #333;
@@ -54,23 +64,14 @@
         }
         #explanation-box.active { bottom: 0; }
 
-        .idea-icon {
-            background: #f1c40f; color: white;
-            width: 35px; height: 35px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 10px; font-size: 18px;
-        }
-
-        .hidden { display: none; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; }
-        
-        .footer { position: absolute; bottom: 20px; width: 100%; text-align: center; color: rgba(255,255,255,0.6); font-size: 13px; }
-
         .next-btn {
             background: #27ae60; color: white; border: none;
             padding: 10px 25px; border-radius: 10px; margin-top: 15px;
             cursor: pointer; float: right; font-weight: bold;
         }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; box-sizing: border-box; }
+        .footer { position: absolute; bottom: 20px; width: 100%; text-align: center; color: rgba(255,255,255,0.6); font-size: 13px; }
     </style>
 </head>
 <body>
@@ -83,27 +84,39 @@
         <p id="login-msg" style="margin-top:15px;"></p>
     </div>
 
+    <div id="welcome-screen" class="glass-box hidden">
+        <h3>FXKARAM မှ ကြိုဆိုပါတယ်</h3>
+        <p>Trading ဗဟုသုတများကို စိတ်အေးလက်အေး ဖြေဆိုနိုင်ရန် Music ကို ဖွင့်ထားနိုင်ပါသည်။</p>
+        
+        <button id="music-control" onclick="toggleMusic()">
+            <i id="music-icon" class="fas fa-play"></i> <span id="music-text">Play Music</span>
+        </button>
+        <br>
+        <button onclick="startQuiz()" style="width:100%; padding:14px; background:#27ae60; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">START QUIZ</button>
+    </div>
+
     <div id="quiz-container" class="glass-box hidden">
-        <p id="q-count" style="font-size: 12px; color: #ddd; margin: 0;">Question 1 of 8</p>
-        <h3 id="question-text" style="margin: 15px 0 25px 0; line-height: 1.4;">Question text goes here?</h3>
+        <p id="q-count" style="font-size: 11px; color: #ccc;">Question 1 of 8</p>
+        <h3 id="question-text" style="margin: 10px 0 20px 0;"></h3>
         <div id="options-container"></div>
         
         <div id="explanation-box">
-            <div class="idea-icon"><i class="fas fa-lightbulb"></i></div>
-            <h4 id="status-text" style="margin: 0 0 8px 0;">Correct!</h4>
-            <p id="explanation-text" style="margin: 0; font-size: 14px; color: #555;"></p>
+            <h4 id="status-text" style="margin: 0 0 8px 0;"></h4>
+            <p id="explanation-text" style="font-size: 14px; color: #555;"></p>
             <button class="next-btn" onclick="nextQuestion()">Next</button>
         </div>
     </div>
 
     <div id="result-screen" class="glass-box hidden">
-        <h2 id="final-score">Score: 0/8</h2>
-        <p id="award-msg" style="line-height: 1.6;"></p>
-        <button onclick="location.reload()" style="background:#34495e; color:white; border:none; padding:12px 30px; border-radius:10px; cursor:pointer;">Try Again</button>
+        <h2 id="final-score"></h2>
+        <p id="award-msg"></p>
+        <button onclick="location.reload()" style="background:#34495e; color:white; border:none; padding:12px 30px; border-radius:10px;">Restart</button>
     </div>
 
     <div class="footer"><i class="fab fa-telegram"></i> @fxkaram</div>
 
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    
     <audio id="snd-click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
     <audio id="snd-swoosh" src="https://www.soundjay.com/misc/sounds/swoosh-1.mp3"></audio>
     <audio id="snd-right" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
@@ -114,75 +127,63 @@
         const CORRECT_PASS = "1234";
         let currentQ = 0;
         let score = 0;
+        let isMusicPlaying = false;
 
         const questions = [
-            { 
-                q: "Forex Market မှာ 'Lot Size' ဆိုတာ ဘာလဲ?", 
-                a: "ကုန်သွယ်မည့် ပမာဏကို တိုင်းတာသည့်ယူနစ်", 
-                options: ["အမြတ်ငွေ ပမာဏ", "ကုန်သွယ်မည့် ပမာဏကို တိုင်းတာသည့်ယူနစ်", "Broker ကောက်ခံသည့်ခ", "အချိန်တိုင်းတာမှု"],
-                exp: "Lot size သည် သင် trade မည့် volume ကို သတ်မှတ်ခြင်းဖြစ်ပြီး risk management အတွက် အလွန်အရေးကြီးပါသည်။"
-            },
-            { 
-                q: "ဘယ်အချိန်မှာ 'Margin Call' ဖြစ်တတ်သလဲ?", 
-                a: "အရှုံးများပြီး လိုအပ်သော margin ထက် နည်းသွားချိန်", 
-                options: ["အမြတ်များနေချိန်", "အရှုံးများပြီး လိုအပ်သော margin ထက် နည်းသွားချိန်", "တနင်္ဂနွေနေ့ ပိတ်ချိန်", "Password မှားချိန်"],
-                exp: "Margin Call သည် အကောင့်ထဲတွင် balance မလုံလောက်တော့သည့်အခါ broker မှ သတိပေးခြင်း သို့မဟုတ် order များပိတ်ခြင်းဖြစ်သည်။"
-            },
-            { 
-                q: "Price Action မှာ 'Pin Bar' က ဘာကို ပြတာလဲ?", 
-                a: "စျေးနှုန်း ပြောင်းပြန်လှန်နိုင်သည့် လက္ခဏာ (Reversal)", 
-                options: ["Trend ဆက်သွားမည့်ပုံစံ", "စျေးနှုန်း ပြောင်းပြန်လှန်နိုင်သည့် လက္ခဏာ (Reversal)", "Market ပိတ်တော့မည်", "Volume နည်းခြင်း"],
-                exp: "Pin Bar (Hammer/Shooting Star) သည် စျေးကွက်၏ ငြင်းပယ်မှု (Rejection) ကို ပြသပြီး reversal ဖြစ်နိုင်ချေရှိပါသည်။"
-            },
-            { 
-                q: "Forex Market မှာ အဓိက အကျဆုံး Trading Sessions ဘယ်နှခုရှိသလဲ?", 
-                a: "၃ ခု (London, New York, Tokyo)", 
-                options: ["၁ ခု", "၂ ခု", "၃ ခု (London, New York, Tokyo)", "၅ ခု"],
-                exp: "အဓိက session ကြီး ၃ ခုရှိပြီး London နှင့် New York ထပ်သည့်အချိန်သည် volatility အကောင်းဆုံးဖြစ်သည်။"
-            },
-            { 
-                q: "Relative Strength Index (RSI) အောက်က ၃၀ မြျဉ်းကို ကျော်သွားရင် ဘာဖြစ်နိုင်သလဲ?", 
-                a: "Oversold (စျေးနှုန်း အကျလွန်နေခြင်း)", 
-                options: ["Overbought (အဝယ်လွန်ခြင်း)", "Oversold (စျေးနှုန်း အကျလွန်နေခြင်း)", "Trend အသစ်တက်ခြင်း", "Market ပိတ်ခြင်း"],
-                exp: "RSI 30 အောက်ရောက်ခြင်းသည် စျေးနှုန်း အကျလွန်နေပြီး ပြန်တက်နိုင်သည့် အလားအလာကို ပြသသည်။"
-            },
-            { 
-                q: "'Bull Market' ဆိုတာ ဘာကို ဆိုလိုတာလဲ?", 
-                a: "စျေးနှုန်းများ တရိပ်ရိပ် တက်နေသော ဈေးကွက်", 
-                options: ["စျေးနှုန်းများ ကျနေသော ဈေးကွက်", "စျေးနှုန်းများ တရိပ်ရိပ် တက်နေသော ဈေးကွက်", "Side way သွားနေသော ဈေးကွက်", "ဘာမှမဖြစ်သော ဈေးကွက်"],
-                exp: "Bull Market သည် စျေးကွက်တွင် ဝယ်လိုအားများပြီး စျေးနှုန်းများ မြင့်တက်နေသည့် အခြေအနေဖြစ်သည်။"
-            },
-            { 
-                q: "Risk to Reward Ratio (1:2) ဆိုတာ ဘာလဲ?", 
-                a: "$1 ရှုံးလျှင် $2 မြတ်အောင် trade ခြင်း", 
-                options: ["$1 ရှုံးလျှင် $1 မြတ်အောင် trade ခြင်း", "$1 ရှုံးလျှင် $2 မြတ်အောင် trade ခြင်း", "$2 ရှုံးလျှင် $1 မြတ်အောင် trade ခြင်း", "Risk မယူဘဲ trade ခြင်း"],
-                exp: "RR Ratio သည် ရေရှည်အမြတ်ထွက်ရန်အတွက် အရေးကြီးဆုံးဖြစ်ပြီး အရှုံးထက် အမြတ်က ၂ ဆ ပိုများရပါမည်။"
-            },
-            { 
-                q: "'Scalping' ဆိုတာ ဘယ်လို Trading ပုံစံမျိုးလဲ?", 
-                a: "အချိန်တိုအတွင်း အမြတ်အနည်းငယ်စီ ယူသည့် ပုံစံ", 
-                options: ["လနှင့်ချီပြီး ကိုင်ထားသည့် ပုံစံ", "အချိန်တိုအတွင်း အမြတ်အနည်းငယ်စီ ယူသည့် ပုံစံ", "နှစ်နှင့်ချီ ရင်းနှီးမြှုပ်နှံသည့် ပုံစံ", "သတင်းကြည့်ပြီး trade သည့် ပုံစံ"],
-                exp: "Scalping သည် မိနစ်ပိုင်းအတွင်း trade များကို အမြန်ဖွင့်/ပိတ် လုပ်ပြီး အမြတ်စုဆောင်းသည့် နည်းလမ်းဖြစ်သည်။"
-            }
+            { q: "Forex Market မှာ 'Lot Size' ဆိုတာ ဘာလဲ?", a: "ကုန်သွယ်မည့် ပမာဏကို တိုင်းတာသည့်ယူနစ်", options: ["အမြတ်ငွေ ပမာဏ", "ကုန်သွယ်မည့် ပမာဏကို တိုင်းတာသည့်ယူနစ်", "Broker ကောက်ခံသည့်ခ", "အချိန်တိုင်းတာမှု"], exp: "Lot size သည် သင် trade မည့် volume ကို သတ်မှတ်ခြင်းဖြစ်ပြီး risk management အတွက် အလွန်အရေးကြီးပါသည်။" },
+            { q: "ဘယ်အချိန်မှာ 'Margin Call' ဖြစ်တတ်သလဲ?", a: "အရှုံးများပြီး လိုအပ်သော margin ထက် နည်းသွားချိန်", options: ["အမြတ်များနေချိန်", "အရှုံးများပြီး လိုအပ်သော margin ထက် နည်းသွားချိန်", "တနင်္ဂနွေနေ့ ပိတ်ချိန်", "Password မှားချိန်"], exp: "Margin Call သည် အကောင့်ထဲတွင် balance မလုံလောက်တော့သည့်အခါ broker မှ သတိပေးခြင်း ဖြစ်သည်။" },
+            { q: "Price Action မှာ 'Pin Bar' က ဘာကို ပြတာလဲ?", a: "စျေးနှုန်း ပြောင်းပြန်လှန်နိုင်သည့် လက္ခဏာ (Reversal)", options: ["Trend ဆက်သွားမည့်ပုံစံ", "စျေးနှုန်း ပြောင်းပြန်လှန်နိုင်သည့် လက္ခဏာ (Reversal)", "Market ပိတ်တော့မည်", "Volume နည်းခြင်း"], exp: "Pin Bar သည် စျေးကွက်၏ Rejection ကို ပြသပြီး reversal ဖြစ်နိုင်ချေရှိပါသည်။" },
+            { q: "Forex Market မှာ အဓိက အကျဆုံး Trading Sessions ဘယ်နှခုရှိသလဲ?", a: "၃ ခု (London, New York, Tokyo)", options: ["၁ ခု", "၂ ခု", "၃ ခု (London, New York, Tokyo)", "၅ ခု"], exp: "London နှင့် New York session များသည် market တွင် အလှုပ်ရှားဆုံး အချိန်များ ဖြစ်သည်။" },
+            { q: "RSI အောက်က ၃၀ မျဉ်းကို ကျော်သွားရင် ဘာဖြစ်နိုင်သလဲ?", a: "Oversold (စျေးနှုန်း အကျလွန်နေခြင်း)", options: ["Overbought (အဝယ်လွန်ခြင်း)", "Oversold (စျေးနှုန်း အကျလွန်နေခြင်း)", "Trend အသစ်တက်ခြင်း", "Market ပိတ်ခြင်း"], exp: "RSI 30 အောက်ရောက်ခြင်းသည် စျေးနှုန်း အကျလွန်နေပြီး ပြန်တက်နိုင်သည့် အလားအလာရှိသည်။" },
+            { q: "'Bull Market' ဆိုတာ ဘာလဲ?", a: "စျေးနှုန်းများ တရိပ်ရိပ် တက်နေသော ဈေးကွက်", options: ["စျေးနှုန်းများ ကျနေသော ဈေးကွက်", "စျေးနှုန်းများ တရိပ်ရိပ် တက်နေသော ဈေးကွက်", "Side way သွားနေသော ဈေးကွက်", "ဘာမှမဖြစ်သော ဈေးကွက်"], exp: "Bull Market သည် စျေးကွက်တွင် ဝယ်လိုအားများပြီး စျေးနှုန်းများ မြင့်တက်နေသည့် အခြေအနေဖြစ်သည်။" },
+            { q: "Risk to Reward Ratio (1:2) ဆိုတာ ဘာလဲ?", a: "$1 ရှုံးလျှင် $2 မြတ်အောင် trade ခြင်း", options: ["$1 ရှုံးလျှင် $1 မြတ်အောင် trade ခြင်း", "$1 ရှုံးလျှင် $2 မြတ်အောင် trade ခြင်း", "$2 ရှုံးလျှင် $1 မြတ်အောင် trade ခြင်း", "Risk မယူဘဲ trade ခြင်း"], exp: "RR Ratio (1:2) သည် အရှုံးထက် အမြတ်က ၂ ဆ ပိုများအောင် trade ခြင်း ဖြစ်သည်။" },
+            { q: "'Scalping' ဆိုတာ ဘာလဲ?", a: "အချိန်တိုအတွင်း အမြတ်အနည်းငယ်စီ ယူသည့် ပုံစံ", options: ["လနှင့်ချီ ကိုင်ထားသည့် ပုံစံ", "အချိန်တိုအတွင်း အမြတ်အနည်းငယ်စီ ယူသည့် ပုံစံ", "နှစ်နှင့်ချီ ရင်းနှီးမြှုပ်နှံသည့် ပုံစံ", "သတင်းကြည့်ပြီး trade သည့် ပုံစံ"], exp: "Scalping သည် မိနစ်ပိုင်းအတွင်း trade များကို အမြန်ဖွင့်/ပိတ် လုပ်ပြီး အမြတ်ယူသည့် နည်းလမ်းဖြစ်သည်။" }
         ];
 
-        function play(id) {
+        function playSound(id) {
             const s = document.getElementById(id);
             s.currentTime = 0; s.play();
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const btn = document.getElementById('music-control');
+            const icon = document.getElementById('music-icon');
+            const txt = document.getElementById('music-text');
+
+            if (!isMusicPlaying) {
+                music.play();
+                btn.classList.add('playing');
+                icon.className = "fas fa-pause";
+                txt.innerText = "Music On";
+                isMusicPlaying = true;
+            } else {
+                music.pause();
+                btn.classList.remove('playing');
+                icon.className = "fas fa-play";
+                txt.innerText = "Music Off";
+                isMusicPlaying = false;
+            }
         }
 
         function handleLogin() {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             if(u === CORRECT_USER && p === CORRECT_PASS) {
-                play('snd-right');
+                playSound('snd-right');
                 document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('quiz-container').classList.remove('hidden');
-                loadQuestion();
+                document.getElementById('welcome-screen').classList.remove('hidden');
             } else {
-                play('snd-wrong');
-                document.getElementById('login-msg').innerHTML = "<small style='color:#ff7675;'>❌ Username/Password မှားယွင်းနေပါသည်။</small>";
+                playSound('snd-wrong');
+                document.getElementById('login-msg').innerHTML = "<small style='color:#ff7675;'>❌ မှားယွင်းနေပါသည်။</small>";
             }
+        }
+
+        function startQuiz() {
+            playSound('snd-click');
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
         }
 
         function loadQuestion() {
@@ -197,7 +198,7 @@
                 const btn = document.createElement('button');
                 btn.className = "option-btn";
                 btn.innerText = opt;
-                btn.onclick = () => { play('snd-click'); checkAnswer(opt, qObj); };
+                btn.onclick = () => { playSound('snd-click'); checkAnswer(opt, qObj); };
                 container.appendChild(btn);
             });
         }
@@ -210,21 +211,21 @@
             if(selected === qObj.a) {
                 score++;
                 status.innerText = "Correct! ✅"; status.style.color = "#27ae60";
-                play('snd-right');
+                playSound('snd-right');
             } else {
                 status.innerText = "Wrong! ❌"; status.style.color = "#e74c3c";
-                play('snd-wrong');
+                playSound('snd-wrong');
             }
             expText.innerText = qObj.exp;
 
             setTimeout(() => {
-                play('snd-swoosh');
+                playSound('snd-swoosh');
                 expBox.classList.add('active');
             }, 300);
         }
 
         function nextQuestion() {
-            play('snd-click');
+            playSound('snd-click');
             currentQ++;
             if(currentQ < questions.length) {
                 loadQuestion();
@@ -237,15 +238,7 @@
             document.getElementById('quiz-container').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('final-score').innerText = `Your Score: ${score}/8`;
-            
-            const msg = document.getElementById('award-msg');
-            if (score >= 7) {
-                msg.innerHTML = "အံ့ဩစရာကောင်းတဲ့ ရလဒ်ပါ! 🔥 <br>သင်ဟာ Trading လောကရဲ့ ကျွမ်းကျင်ပညာရှင်တစ်ယောက် ဖြစ်လာဖို့ အဆင်သင့်ပါပဲ။";
-            } else if (score >= 4) {
-                msg.innerHTML = "ရလဒ်ကောင်းပါတယ်။ 👍 <br>အခြေခံတွေ ပိုင်နိုင်နေပြီမို့ နောက်ထပ် အတွေ့အကြုံလေးတွေ ထပ်ဖြည့်လိုက်ရင် ပိုကောင်းလာမှာပါ။";
-            } else {
-                msg.innerHTML = "စိတ်မညစ်ပါနဲ့ဦး။ 💪 <br>Trading ဆိုတာ သင်ယူမှုတွေ အမြဲလုပ်နေရတာပါ။ အခြေခံတွေကို ပြန်လေ့လာပြီး ထပ်စမ်းကြည့်ရအောင်။";
-            }
+            document.getElementById('award-msg').innerText = score >= 4 ? "Trading အခြေခံတွေ ပိုင်နိုင်နေပါပြီ။ ဆက်လက်ကြိုးစားပါ!" : "ထပ်မံလေ့လာရန် လိုအပ်ပါသေးသည်။ အားတင်းထားပါ!";
         }
     </script>
 </body>
