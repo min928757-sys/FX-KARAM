@@ -3,112 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Flashcards</title>
+    <title>FXKARAM Trading Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --primary: #2c3e50;
+        }
+
         body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f7f6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
+            /* Watercolor Illustration Background */
+            background: url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=2070') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
         }
 
-        #login-form {
-            background: white;
-            padding: 40px;
+        /* Glassmorphism Effect */
+        .glass-box {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            width: 300px;
+            position: relative;
+            z-index: 10;
         }
 
-        h3 { color: #333; margin-bottom: 20px; }
+        h2 { color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
 
+        /* Login Inputs */
         input {
-            display: block;
             width: 100%;
-            margin: 15px 0;
             padding: 12px;
-            border: 1px solid #ddd;
+            margin: 10px 0;
+            border: none;
             border-radius: 8px;
-            box-sizing: border-box; /* padding ကြောင့် size မပြောင်းအောင် */
-            font-size: 14px;
+            background: rgba(255,255,255,0.8);
+            box-sizing: border-box;
+            outline: none;
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #28a745;
+            background: #27ae60;
             color: white;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
             transition: 0.3s;
+            margin-top: 10px;
         }
 
-        button:hover { background-color: #218838; }
+        button:hover { background: #2ecc71; transform: translateY(-2px); }
 
-        #flashcard-content { display: none; text-align: center; }
+        /* Quiz Elements */
+        .hidden { display: none; }
+        .option-btn {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            text-align: left;
+            margin-bottom: 8px;
+        }
+        .option-btn:hover { background: #fff; color: #000; }
 
-        /* Flashcard Styling */
-        .card { width: 300px; height: 200px; perspective: 1000px; cursor: pointer; }
-        .card-inner {
-            width: 100%; height: 100%; position: relative;
-            transition: transform 0.6s; transform-style: preserve-3d;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15); border-radius: 15px;
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
         }
-        .card-inner.flipped { transform: rotateY(180deg); }
-        .front, .back {
-            position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; display: flex;
-            justify-content: center; align-items: center;
-            border-radius: 15px; font-size: 22px; padding: 20px;
+
+        /* Moving Animation Background Element */
+        .moving-bg {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: move 10s infinite alternate linear;
+            z-index: 1;
         }
-        .front { background: white; color: #333; }
-        .back { background: #007bff; color: white; transform: rotateY(180deg); }
-        
-        #error { color: #dc3545; font-size: 13px; margin-top: 10px; }
+
+        @keyframes move {
+            from { transform: translate(-50%, -50%); }
+            to { transform: translate(50%, 50%); }
+        }
+
+        #timer-msg { color: #e74c3c; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="login-form">
-        <h3>Members Only</h3>
+    <div class="moving-bg"></div>
+
+    <div id="login-screen" class="glass-box">
+        <h2>FXKARAM LOGIN</h2>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
-        <button onclick="checkLogin()">Login</button>
-        <p id="error"></p>
+        <button id="login-btn" onclick="handleLogin()">Login</button>
+        <p id="login-msg"></p>
+        <p id="timer-msg"></p>
     </div>
 
-    <div id="flashcard-content">
-        <div class="card" onclick="this.querySelector('.card-inner').classList.toggle('flipped')">
-            <div class="card-inner">
-                <div class="front">ကဲ... အဖြေကို ကြည့်မလား?</div>
-                <div class="back">ဒါက လျှို့ဝှက်ချက်ပါ! 🤫</div>
-            </div>
-        </div>
-        <br>
-        <button onclick="location.reload()" style="background:#6c757d; width: auto;">Logout</button>
+    <div id="welcome-screen" class="glass-box hidden">
+        <h2>FXKARAM မှ ကြိုဆိုပါတယ်။ <i class="fas fa-check-circle" style="color: #2ecc71;"></i></h2>
+        <p style="color: white;">မိတ်ဆွေရဲ့ Trading Knowledge ကို မေးခွန်းလေးတွေနဲ့ စမ်းသပ်ကြည့်ရအောင်။</p>
+        <button onclick="startQuiz()">Next <i class="fas fa-arrow-right"></i></button>
     </div>
+
+    <div id="quiz-screen" class="glass-box hidden">
+        <h3 id="question-text" style="color: white; margin-bottom: 20px;">Question here?</h3>
+        <div id="options-container"></div>
+        <p id="feedback" style="margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+    <div id="result-screen" class="glass-box hidden">
+        <h2 id="final-score">Score: 0/8</h2>
+        <p id="award-msg" style="color: white; font-size: 18px;"></p>
+        <button onclick="location.reload()">Try Again</button>
+    </div>
+
+    <div class="footer">
+        <i class="fab fa-telegram"></i> @fxkaram
+    </div>
+
+    <audio id="sound-click" src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
+    <audio id="sound-right" src="https://www.fesliyanstudios.com/play-mp3/2645"></audio>
+    <audio id="sound-wrong" src="https://www.fesliyanstudios.com/play-mp3/5643"></audio>
 
     <script>
-        function checkLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            
-            // ဒီနေရာမှာ သင်ပေးချင်တဲ့ Username နဲ့ Password ကို ပြောင်းနိုင်ပါတယ်
-            if (user === "fxkaram" && pass === "1234") {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('flashcard-content').style.display = 'block';
+        // Settings
+        const CORRECT_USER = "fxkaram";
+        const CORRECT_PASS = "trade123";
+        let attempts = 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questions = [
+            { q: "Forex market မှာ 'Spread' ဆိုတာ ဘာကို ဆိုလိုတာလဲ?", a: "Bid နဲ့ Ask price ကြားက ကွာဟချက်", options: ["Profit ရာခိုင်နှုန်း", "Bid နဲ့ Ask price ကြားက ကွာဟချက်", "Broker ရဲ့ အမြတ်", "Leverage ပမာဏ"] },
+            { q: "Candlestick pattern ထဲမှာ 'Doji' က ဘာကို ပြတာလဲ?", a: "Market မှာ ဆုံးဖြတ်ချက်မချနိုင်ခြင်း (Indecision)", options: ["Trend အပြင်းအထန် တက်ခြင်း", "Market မှာ ဆုံးဖြတ်ချက်မချနိုင်ခြင်း (Indecision)", "Trend ပြောင်းတော့မည်", "Volume အလွန်နည်းခြင်း"] },
+            { q: "Risk Management အရ တစ်ခါ trade ရင် အများဆုံး ဘယ်လောက် % ပဲ ဆုံးရှုံးခံသင့်သလဲ?", a: "1-2%", options: ["10-20%", "50%", "1-2%", "Risk မရှိပါ"] },
+            { q: "Bullish Engulfing pattern ပေါ်လာရင် ဘာကို ဆိုလိုတာလဲ?", a: "စျေးတက်နိုင်ချေရှိသည်", options: ["စျေးကျတော့မည်", "စျေးတက်နိုင်ချေရှိသည်", "Side way သွားမည်", "ဘာမှမဖြစ်နိုင်"] },
+            { q: "Leverage 1:100 သုံးရင် $100 နဲ့ ဘယ်လောက်ဖိုး trade လို့ရမလဲ?", a: "$10,000", options: ["$1,000", "$10,000", "$5,000", "$100"] },
+            { q: "Fibonacci Retracement မှာ အရေးကြီးဆုံး level က ဘယ်လောက်လဲ?", a: "61.8%", options: ["20.5%", "61.8%", "100%", "0%"] },
+            { q: "Fundamental Analysis က ဘာကို အဓိက လေ့လာတာလဲ?", a: "စီးပွားရေး အချက်အလက်နှင့် သတင်းများ", options: ["Chart pattern များ", "Indicator များ", "စီးပွားရေး အချက်အလက်နှင့် သတင်းများ", "အရင်က စျေးနှုန်းများ"] },
+            { q: "Margin Call ဆိုတာ ဘာလဲ?", a: "Balance မလုံလောက်လို့ ပိုထည့်ရန် သတိပေးခြင်း", options: ["အမြတ်ရလို့ ဖုန်းဆက်ခြင်း", "Balance မလုံလောက်လို့ ပိုထည့်ရန် သတိပေးခြင်း", "Trade ပိတ်လိုက်ခြင်း", "Broker ပြောင်းခြင်း"] }
+        ];
+
+        // Functions
+        function playSound(id) {
+            const s = document.getElementById(id);
+            s.currentTime = 0;
+            s.play();
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const msg = document.getElementById('login-msg');
+
+            if (u === CORRECT_USER && p === CORRECT_PASS) {
+                msg.innerHTML = '<span style="color: #2ecc71;"><i class="fas fa-check-circle"></i> Success!</span>';
+                playSound('sound-right');
+                setTimeout(() => {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('welcome-screen').classList.remove('hidden');
+                }, 1000);
             } else {
-                document.getElementById('error').innerText = "Username သို့မဟုတ် Password မှားယွင်းနေပါသည်။";
+                attempts++;
+                msg.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> မှားယွင်းနေပါသည်။</span>';
+                playSound('sound-wrong');
+
+                if (attempts >= 5) {
+                    document.getElementById('login-btn').disabled = true;
+                    let timeLeft = 60;
+                    const timer = setInterval(() => {
+                        document.getElementById('timer-msg').innerText = `ခေတ္တစောင့်ဆိုင်းပါ: ${timeLeft}s`;
+                        timeLeft--;
+                        if (timeLeft < 0) {
+                            clearInterval(timer);
+                            document.getElementById('login-btn').disabled = false;
+                            document.getElementById('timer-msg').innerText = "";
+                            attempts = 0;
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function startQuiz() {
+            playSound('sound-click');
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const qObj = questions[currentQuestionIndex];
+            document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${qObj.q}`;
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+            document.getElementById('feedback').innerText = "";
+
+            qObj.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, qObj.a);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                score++;
+                playSound('sound-right');
+                document.getElementById('feedback').innerHTML = '<span style="color: #2ecc71;">မှန်ကန်ပါတယ်။ <i class="fas fa-bell"></i></span>';
+            } else {
+                playSound('sound-wrong');
+                document.getElementById('feedback').innerHTML = '<span style="color: #e74c3c;">မှားသွားပါတယ်။ <i class="fas fa-times"></i></span>';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    playSound('sound-click');
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1500);
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `Your Score: ${score}/8`;
+            
+            const msg = document.getElementById('award-msg');
+            if (score >= 7) {
+                msg.innerText = "ဂုဏ်ယူပါတယ်! သင်ဟာ Professional Trader တစ်ယောက် ဖြစ်ဖို့ အလားအလာအများကြီး ရှိနေပါပြီ။ 🔥";
+            } else if (score >= 4) {
+                msg.innerText = "အဆင်ပြေပါတယ်။ အခြေခံတော့ ရှိနေပြီမို့ ထပ်ပြီး လေ့လာမယ်ဆိုရင် ပိုကောင်းလာမှာပါ။ 📈";
+            } else {
+                msg.innerText = "စိတ်မပျက်ပါနဲ့။ Trading က ခက်ခဲတဲ့ ပညာရပ်မို့ ထပ်တလဲလဲ လေ့ကျင့်ဖို့ လိုအပ်ပါတယ်။ အားတင်းထားပါ! 💪";
             }
         }
     </script>
-
 </body>
 </html>
